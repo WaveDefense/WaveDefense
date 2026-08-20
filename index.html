@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Wave Defense</title>
+<title>Neon Crypt</title>
 <style>
 @font-face{font-family:"NeonPixel";src:url("assets/PixelNeon.ttf") format("truetype");font-display:block}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -2582,6 +2582,37 @@ canvas{animation:none!important}
   box-shadow:2px 2px #000,inset 0 0 0 1px #fff08a !important;
   text-shadow:none !important;
 }
+#gameEntryLoading .gelWeaponName.celestialWeaponName{
+  position:relative;
+  color:#f5eaff !important;
+  background:linear-gradient(90deg,#24104b 0%,#6d2bc2 45%,#b65cff 70%,#3a146d 100%) !important;
+  border:1px solid #d9a7ff !important;
+  box-shadow:2px 2px #000,0 0 6px rgba(174,76,255,.85),inset 0 0 0 1px #fff0ff !important;
+  text-shadow:1px 1px #170523,0 0 4px #e6baff !important;
+  letter-spacing:1.2px !important;
+  animation:celestialWeaponPulse 1.4s steps(2,end) infinite;
+}
+#gameEntryLoading .gelWeaponName.celestialWeaponName::before{
+  content:"✦";position:absolute;left:3px;top:1px;color:#fff;opacity:.9;font-size:7px;text-shadow:0 0 5px #d69cff;
+}
+#gameEntryLoading .gelWeaponName.celestialWeaponName::after{
+  content:"PREMIUM";position:absolute;right:3px;top:-7px;padding:1px 2px;color:#fff;background:#5a1ca0;border:1px solid #d7a0ff;font:4px "NeonPixel","Courier New",monospace;letter-spacing:1px;box-shadow:1px 1px #000;
+}
+@keyframes celestialWeaponPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.28)}}
+
+#gameEntryLoading .gelGun.celestialGun{
+  width:86% !important;
+  filter:drop-shadow(4px 4px 0 #000) drop-shadow(0 0 5px #8d35ff) drop-shadow(0 0 12px rgba(189,105,255,.8)) !important;
+  animation:celestialLoadingGun 1.15s steps(3,end) infinite;
+}
+#gameEntryLoading .gelPortraitFrame:has(.celestialGun){
+  border-color:#b875ff !important;
+  box-shadow:5px 5px #000,inset 0 0 0 2px #542080,0 0 12px rgba(155,72,255,.35) !important;
+}
+@keyframes celestialLoadingGun{
+  0%,100%{filter:drop-shadow(4px 4px 0 #000) drop-shadow(0 0 5px #8d35ff) drop-shadow(0 0 10px rgba(189,105,255,.65));}
+  50%{filter:drop-shadow(4px 4px 0 #000) drop-shadow(0 0 9px #b96cff) drop-shadow(0 0 17px rgba(214,153,255,.9));}
+}
 #gameEntryLoading .gelGun{width:82% !important;top:63% !important;transform:translate(-40%,-50%) scale(1.08) !important}
 #gameEntryLoading .gelBar{position:relative;width:min(70vw,620px) !important;height:20px !important;border:3px solid #8d96a3 !important;background:#0c1119 !important;box-shadow:4px 4px #000 !important;padding:3px !important;overflow:hidden !important}
 #gameEntryLoading .gelBar::after{content:"DATA LOADING";position:absolute;left:50%;top:-18px;transform:translateX(-50%);z-index:5;pointer-events:none;white-space:nowrap;color:#fff;font:6px "NeonPixel","Courier New",monospace;letter-spacing:2px;text-shadow:2px 2px #000}
@@ -3138,6 +3169,14 @@ canvas{animation:none!important}
   box-shadow:0 0 6px rgba(255,211,77,.55),inset 0 0 0 1px rgba(255,233,168,.35) !important;
   background:linear-gradient(180deg,rgba(109,83,21,.35),rgba(23,17,6,.35)) !important;
 }
+.profileWeapon.celestial{
+  border-color:#a66cff !important;
+  box-shadow:0 0 7px rgba(166,108,255,.65),inset 0 0 0 1px rgba(226,202,255,.32) !important;
+  background:linear-gradient(180deg,rgba(88,43,131,.35),rgba(20,10,34,.38)) !important;
+}
+.profileWeapon.celestial .profileWeaponBadge{
+  color:#ead8ff !important;background:#542080 !important;border-color:#b875ff !important;
+}
 .profileWeaponBadge{
   display:inline-block;margin:0 auto;z-index:3;
   font:4.5px "NeonPixel","Courier New",monospace;letter-spacing:1px;
@@ -3600,6 +3639,12 @@ canvas{animation:none!important}
         <div class="skinRarity premium">PREMIUM</div>
         <div class="invName">GOLDEN</div>
         <img class="invWeapon skinImg" src="image/GoldenAk47.png" alt="GOLDEN">
+        <button class="invEquip skinEquip" disabled>TERKUNCI</button>
+      </div>
+      <div class="invCard skinCard locked celestialCard" data-skin="celestialGlock17">
+        <div class="skinRarity celestial">CELESTIAL</div>
+        <div class="invName">GLOCK 17</div>
+        <img class="invWeapon skinImg celestialGif" src="image/CGlock17.gif" alt="GLOCK 17">
         <button class="invEquip skinEquip" disabled>TERKUNCI</button>
       </div>
     </div>
@@ -4114,9 +4159,15 @@ async function saveOwnedWeapons(){
 }
 const gunGoldenDesertEagle=img("GoldenDesertEagle.png");
 const gunGoldenAk47=img("GoldenAk47.png");
+const gunCelestialGlock=img("CGlock17.gif");
+const gunCelestialA1=img("CGlock17A1.png");
+const gunCelestialA2=img("CGlock17A2.png");
+const gunCelestialA3=img("CGlock17A3.png");
+const gunCelestialA4=img("CGlock17A4.png");
 const skinDefs={
   goldenDesertEagle:{weapon:"desertEagle",price:0,rarity:"premium",img:gunGoldenDesertEagle},
-  goldenAk47:{weapon:"ak47",price:0,rarity:"premium",img:gunGoldenAk47}
+  goldenAk47:{weapon:"ak47",price:0,rarity:"premium",img:gunGoldenAk47},
+  celestialGlock17:{weapon:"glock17",price:0,rarity:"celestial",img:gunCelestialGlock}
 };
 function getActiveWeaponStats(id){
   const base=weaponStats[id]||weaponStats.glock17;
@@ -4156,7 +4207,16 @@ async function loadOwnedSkins(){
       if(dataEq)equippedSkins=Object.assign(equippedSkins,dataEq);
     }catch(e){}
   }
+  // Remove legacy phantom Golden ownership from this account only.
+  // Celestial is the active new skin and remains untouched.
+  const hadLegacyGolden = ownedSkins.delete("goldenDesertEagle") | ownedSkins.delete("goldenAk47");
+  if(equippedSkins.desertEagle==="goldenDesertEagle")delete equippedSkins.desertEagle;
+  if(equippedSkins.ak47==="goldenAk47")delete equippedSkins.ak47;
   for(const w in equippedSkins){if(!isSkinOwned(equippedSkins[w]))delete equippedSkins[w];}
+  if(hadLegacyGolden){
+    try{localStorage.setItem(skinOwnedKey(),JSON.stringify([...ownedSkins]));localStorage.setItem(skinEquippedKey(),JSON.stringify(equippedSkins));}catch(e){}
+    if(typeof myUid!=="undefined"&&myUid){db.ref("users/"+myUid).update({ownedSkins:[...ownedSkins],equippedSkins}).catch(()=>{});}
+  }
   refreshSkinUI();
 }
 async function saveOwnedSkins(){
@@ -4238,6 +4298,7 @@ function refreshSkinUI(){
 }
 function activeGunImage(){
   const skinId=equippedSkins[currentWeapon];
+  if(skinId==="celestialGlock17"&&currentWeapon==="glock17"&&isSkinOwned("celestialGlock17"))return gunCelestialGlock;
   if(skinId&&skinDefs[skinId]&&isSkinOwned(skinId))return skinDefs[skinId].img;
   switch(currentWeapon){
     case "desertEagle":return gunDesertEagle;
@@ -4405,6 +4466,49 @@ function bindJoy(el,state){
   el.addEventListener("pointercancel",reset);
 }
 bindJoy(document.getElementById("jl"),move);
+
+/* CELESTIAL CONTROL FIX: robust mobile joystick fallback.
+   Some Android WebViews/GitHub Pages environments can lose PointerEvents
+   while dragging a joystick. Keep the original pointer controls and add a
+   touch fallback so movement never gets stuck at idle. */
+(function installTouchMoveFallback(){
+  const el=document.getElementById("jl");
+  if(!el)return;
+  const thumb=el.querySelector(".thumb");
+  let activeId=null;
+  function calc(t){
+    const r=el.getBoundingClientRect();
+    const cx=r.left+r.width/2, cy=r.top+r.height/2;
+    let x=t.clientX-cx, y=t.clientY-cy;
+    const m=25, d=Math.hypot(x,y)||1;
+    if(d>m){x=x/d*m;y=y/d*m;}
+    move.x=x/m; move.y=y/m; move.active=true;
+    if(thumb)thumb.style.transform=`translate(${x}px,${y}px)`;
+  }
+  function end(){
+    activeId=null; move.x=0; move.y=0; move.active=false;
+    if(thumb)thumb.style.transform="translate(0,0)";
+  }
+  el.addEventListener("touchstart",e=>{
+    if(activeId!==null)return;
+    const t=e.changedTouches[0];
+    if(!t)return;
+    activeId=t.identifier; calc(t); e.preventDefault();
+  },{passive:false});
+  el.addEventListener("touchmove",e=>{
+    if(activeId===null)return;
+    for(const t of e.changedTouches){
+      if(t.identifier===activeId){calc(t);break;}
+    }
+    e.preventDefault();
+  },{passive:false});
+  el.addEventListener("touchend",e=>{
+    for(const t of e.changedTouches){if(t.identifier===activeId){end();break;}}
+    e.preventDefault();
+  },{passive:false});
+  el.addEventListener("touchcancel",end,{passive:false});
+})();
+
 /* Touch aim joystick is retained only for TOUCH mode. */
 const touchAim=document.getElementById("jr");
 if(touchAim)bindJoy(touchAim,aim);
@@ -4621,10 +4725,16 @@ function spawnBoss(){
     hitR:26,touchR:30
   });
 }
+function isCelestialGlock17Active(){
+  return currentWeapon==="glock17" &&
+    equippedSkins && equippedSkins.glock17==="celestialGlock17" &&
+    isSkinOwned("celestialGlock17");
+}
+
 function fire(){
   profileRecordShot();
   const a=p.angle+(Math.random()-.5)*accuracy,sp=205;
-  bullets.push({x:p.x+Math.cos(a)*12,y:p.y+Math.sin(a)*12,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1});
+  bullets.push({x:p.x+Math.cos(a)*12,y:p.y+Math.sin(a)*12,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,skin:(isCelestialGlock17Active() ? "celestialGlock17" : null)});
 
   // Short muzzle flash.
   muzzleFlash=.065;
@@ -4638,6 +4748,41 @@ function fire(){
 }
 function particle(x,y){
   for(let i=0;i<2;i++){const a=Math.random()*6.283,s=15+Math.random()*35;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.25})}
+}
+function drawCelestialBullet(b){
+  const sp=Math.hypot(b.vx,b.vy)||1;
+  const nx=b.vx/sp, ny=b.vy/sp;
+  const x=Math.round(b.x), y=Math.round(b.y);
+  ctx.save();
+  // Lightweight pixel-art celestial trail: no gradients or per-frame allocations.
+  ctx.globalAlpha=.22;
+  ctx.fillStyle="#8a35ff";
+  ctx.fillRect(Math.round(x-nx*14-1),Math.round(y-ny*14-1),3,3);
+  ctx.globalAlpha=.38;
+  ctx.fillStyle="#a84dff";
+  ctx.fillRect(Math.round(x-nx*9-1),Math.round(y-ny*9-1),3,3);
+  ctx.globalAlpha=.62;
+  ctx.fillStyle="#d38aff";
+  ctx.fillRect(Math.round(x-nx*5-1),Math.round(y-ny*5-1),3,3);
+  // Bright purple core.
+  ctx.globalAlpha=1;
+  ctx.fillStyle="#f4d8ff";
+  ctx.fillRect(x-1,y-1,3,3);
+  ctx.fillStyle="#a84dff";
+  ctx.fillRect(x+2,y-1,2,2);
+  // Tiny four-point celestial spark, throttled to a cheap time check.
+  if(((performance.now()|0)>>6)&1){
+    ctx.fillStyle="#ffffff";
+    ctx.fillRect(x-4,y,2,1);ctx.fillRect(x+3,y,2,1);
+    ctx.fillStyle="#c47cff";
+    ctx.fillRect(x,y-4,1,2);ctx.fillRect(x,y+3,1,2);
+  }
+  ctx.restore();
+}
+
+function drawBullet(b,angle){
+  if(b.skin==="celestialGlock17"){drawCelestialBullet(b);return;}
+  sprite(bullet,b.x,b.y,4,12,angle);
 }
 function updateHud(){
   profileMarkWave(wave);
@@ -4797,12 +4942,31 @@ function sprite(im,x,y,w,h,a=0,mirrorX=false){
   ctx.restore();
 }
 
-function gunImageForWeapon(id){switch(id){case "desertEagle":return gunDesertEagle;case "m4a1":return gunM4a1;case "mp5":return gunMp5;case "ak47":return gunAk47;case "scar":return gunScar;default:return gunGlock;}}
-function gunFrameForWeapon(id,t){if(id!=="glock17")return gunImageForWeapon(id);if(t<0.045)return gunA1;if(t<0.085)return gunA2;if(t<0.13)return gunA1;return gunGlock;}
+function gunImageForWeapon(id){
+  const sid=equippedSkins&&equippedSkins[id];
+  if(id==="glock17"&&sid==="celestialGlock17"&&isSkinOwned("celestialGlock17"))return gunCelestialGlock;
+  switch(id){case "desertEagle":return gunDesertEagle;case "m4a1":return gunM4a1;case "mp5":return gunMp5;case "ak47":return gunAk47;case "scar":return gunScar;default:return gunGlock;}
+}
+function gunFrameForWeapon(id,t){
+  if(id==="glock17"&&equippedSkins&&equippedSkins.glock17==="celestialGlock17"&&isSkinOwned("celestialGlock17")){
+    if(t<0.035)return gunCelestialA1;
+    if(t<0.070)return gunCelestialA2;
+    if(t<0.105)return gunCelestialA3;
+    if(t<0.145)return gunCelestialA4;
+    return gunCelestialGlock;
+  }
+  if(id!=="glock17")return gunImageForWeapon(id);
+  if(t<0.045)return gunA1;if(t<0.085)return gunA2;if(t<0.13)return gunA1;return gunGlock;
+}
 function gunSoundForWeapon(id){const base=weaponAudio[id]||weaponAudio.glock17;if(!base)return;try{base.currentTime=0;const q=base.play();if(q&&q.catch)q.catch(()=>{})}catch(e){}}
 function currentGunFrame(t){
-  // Only the Glock has slide/reload frames.
-  // Other weapons use their normal sprite while firing; recoil is handled separately.
+  if(currentWeapon==="glock17"&&equippedSkins&&equippedSkins.glock17==="celestialGlock17"&&isSkinOwned("celestialGlock17")){
+    if(t<0.035)return gunCelestialA1;
+    if(t<0.070)return gunCelestialA2;
+    if(t<0.105)return gunCelestialA3;
+    if(t<0.145)return gunCelestialA4;
+    return gunCelestialGlock;
+  }
   if(currentWeapon!=="glock17")return activeGunImage();
   if(t<0.045)return gunA1;
   if(t<0.085)return gunA2;
@@ -4831,6 +4995,10 @@ function drawGun(){
     ctx.shadowColor="#ffd34d";
     ctx.shadowBlur=flick;
   }
+  if(currentWeapon==="glock17"&&equippedSkins&&equippedSkins.glock17==="celestialGlock17"&&isSkinOwned("celestialGlock17")){
+    ctx.shadowColor="#b96cff";
+    ctx.shadowBlur=10+(Math.floor(performance.now()/90)%3)*3;
+  }
   ctx.drawImage(gunFrame,-14,-8,28,16);
   ctx.restore();
 
@@ -4842,12 +5010,18 @@ function drawGun(){
     ctx.translate(Math.round(fx),Math.round(fy));
     ctx.rotate(a);
     ctx.globalAlpha=alpha;
-    ctx.fillStyle="#fff4b0";
+    const celestial=currentWeapon==="glock17"&&equippedSkins&&equippedSkins.glock17==="celestialGlock17"&&isSkinOwned("celestialGlock17");
+    ctx.fillStyle=celestial?"#f5e8ff":"#fff4b0";
     ctx.fillRect(-2,-2,7,4);
-    ctx.fillStyle="#ffd34d";
+    ctx.fillStyle=celestial?"#b86cff":"#ffd34d";
     ctx.fillRect(2,-4,5,2);
     ctx.fillRect(2,2,5,2);
     ctx.fillRect(7,-1,3,2);
+    if(celestial){
+      ctx.fillStyle="#7a35ff";
+      ctx.fillRect(9,-3,4,2);
+      ctx.fillRect(9,1,4,2);
+    }
     ctx.restore();
     ctx.globalAlpha=1;
   }
@@ -4867,7 +5041,7 @@ function draw(){
     sprite(arr[e.frame%arr.length],e.x,e.y,sz.w,sz.h);
     if(e.hp<e.max){const bar=enemyBarSize(e.type);ctx.fillStyle="#15121b";ctx.fillRect(e.x-bar.w/2,e.y-bar.y,bar.w,2);ctx.fillStyle="#ef334f";ctx.fillRect(e.x-bar.w/2,e.y-bar.y,bar.w*(e.hp/e.max),2)}
   }
-  for(const b of bullets)sprite(bullet,b.x,b.y,4,12,p.angle);
+  for(const b of bullets)drawBullet(b,Math.atan2(b.vy,b.vx));
   for(const b of ebullets)sprite(b.type==="imp"?enemyBullet2:enemyBullet1,b.x,b.y,19,13,Math.atan2(b.vy,b.vx));
 
   // Body first, gun centered on the body and rotated around its center.
@@ -4917,7 +5091,7 @@ function mpFire(pl){
   const wid=weaponStats[pl.weapon]?pl.weapon:"glock17";
   const stats=weaponStats[wid];
   const a=pl.angle+(Math.random()-.5)*accuracy,sp=205;
-  bullets.push({x:pl.x+Math.cos(a)*12,y:pl.y+Math.sin(a)*12,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,damage:stats.damage,weapon:wid,owner:pl.uid});
+  bullets.push({x:pl.x+Math.cos(a)*12,y:pl.y+Math.sin(a)*12,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,damage:stats.damage,weapon:wid,skin:pl.skin||null,owner:pl.uid});
   pl.muzzleFlash=.065;pl.gunAnim=0;pl.gunRecoil=Math.min(6,pl.gunRecoil+4.5);pl.gunRecoilVel+=42;
   gunSoundForWeapon(wid);shake=.075;
 }
@@ -5355,7 +5529,7 @@ async function startMultiplayerGame(){
         const skins=ss.val()||{};
         const wid=playersData[uid].weapon;
         const sid=skins[wid];
-        if(sid==="goldenAk47"&&wid==="ak47" || sid==="goldenDesertEagle"&&wid==="desertEagle"){
+        if(sid==="goldenAk47"&&wid==="ak47" || sid==="goldenDesertEagle"&&wid==="desertEagle" || sid==="celestialGlock17"&&wid==="glock17"){
           playersData[uid].skin=sid;
         }else{
           playersData[uid].skin=playersData[uid].skin||null;
@@ -5442,7 +5616,7 @@ function mpDraw(){
     sprite(arr[(e.frame||0)%arr.length],e.x,e.y,sz.w,sz.h);
     if(e.hp<e.max){const bar=enemyBarSize(e.type);ctx.fillStyle="#15121b";ctx.fillRect(e.x-bar.w/2,e.y-bar.y,bar.w,2);ctx.fillStyle="#ef334f";ctx.fillRect(e.x-bar.w/2,e.y-bar.y,bar.w*(e.hp/e.max),2)}
   }
-  for(const b of bulletsToDraw)sprite(bullet,b.x,b.y,4,12,Math.atan2(b.vy,b.vx));
+  for(const b of bulletsToDraw)drawBullet(b,Math.atan2(b.vy,b.vx));
   for(const b of ebulletsToDraw)sprite(b.type==="imp"?enemyBullet2:enemyBullet1,b.x,b.y,19,13,Math.atan2(b.vy,b.vx));
 
   for(const pl of playersToDraw){
@@ -5458,9 +5632,15 @@ function mpDraw(){
     ctx.rotate(left?a+Math.PI:a);
     ctx.scale(left?-1:1,1);
     const gunId=weaponStats[pl.weapon]?pl.weapon:"glock17";
-    const gunImg=(pl.skin==="goldenDesertEagle"&&gunId==="desertEagle")?gunGoldenDesertEagle:
+    const gunImg=(pl.skin==="celestialGlock17"&&gunId==="glock17")?gunCelestialGlock:
+                 (pl.skin==="goldenDesertEagle"&&gunId==="desertEagle")?gunGoldenDesertEagle:
                  (pl.skin==="goldenAk47"&&gunId==="ak47")?gunGoldenAk47:gunImageForWeapon(gunId);
-    const gunFrame=(pl.skin==="goldenDesertEagle"&&gunId==="desertEagle")?gunGoldenDesertEagle:
+    const gunFrame=(pl.skin==="celestialGlock17"&&gunId==="glock17")?(
+                    (pl.gunAnim<0.035)?gunCelestialA1:
+                    (pl.gunAnim<0.070)?gunCelestialA2:
+                    (pl.gunAnim<0.105)?gunCelestialA3:
+                    (pl.gunAnim<0.145)?gunCelestialA4:gunCelestialGlock):
+                   (pl.skin==="goldenDesertEagle"&&gunId==="desertEagle")?gunGoldenDesertEagle:
                    (pl.skin==="goldenAk47"&&gunId==="ak47")?gunGoldenAk47:gunFrameForWeapon(gunId,pl.gunAnim==null?999:pl.gunAnim);
     if(gunImg&&gunImg.complete)ctx.drawImage(gunFrame,-16,-9,32,18);
     ctx.restore();
@@ -5599,7 +5779,7 @@ document.getElementById("play").addEventListener("click",async()=>{
 
   // Loading screen (progress bar / tips) plays first, on its own.
   if(typeof window.showGameEntryLoading==="function"){
-    await window.showGameEntryLoading("single");
+    try{ await window.showGameEntryLoading("single"); }catch(e){ console.warn("Game loading UI failed, continuing to game:",e); }
   }
   if(typeof window.hideGameEntryLoading==="function"){
     window.hideGameEntryLoading();
@@ -5617,9 +5797,12 @@ document.getElementById("play").addEventListener("click",async()=>{
 
   profileFlushStats();
   running=true;
+  // Start the first spawn immediately after countdown; the normal update loop
+  // will continue spawning enemies from here.
+  spawn=Math.min(spawn,.2);
 });
 
-const PRELOAD_ASSETS=["assets/PixelNeon.ttf", "assets/Transparent Button With White Blue Border_Idle.png", "assets/Transparent Button With White Blue Border_Pressed.png", "assets/Line light joystick border.png", "assets/Line light joystick thumb.png", "image/background.png", "image/title.png", "image/playbutton.png", "image/multiplayerbutton.png", "image/inventorybutton.png", "image/shopbutton.png", "image/event.png", "image/money.png", "image/coin.png", "image/Glock17.png", "image/DesertEagle.png", "image/M4a1.png", "image/Mp5.png", "image/Ak47.png", "image/Scar.png", "image/GoldenDesertEagle.png", "image/GoldenAk47.png", "image/createlobbybutton.png", "image/joinlobbybutton.png", "image/backbutton.png", "image/playgamebutton.png", "image/exitlobbybutton.png", "assets/click.wav", "assets/TheRoom2.png", "assets/Vingette.png", "assets/Player1.png", "assets/Player2.png", "assets/Player22.png", "assets/Player3.png", "assets/Player4.png", "assets/Ghost1.png", "assets/Ghost2.png", "assets/Ghost3.png", "assets/Ghost4.png", "assets/Spider1.png", "assets/Spider2.png", "assets/Spider3.png", "assets/Spider4.png", "assets/ImpFly1.png", "assets/ImpFly2.png", "assets/ImpFly3.png", "assets/ImpFly5.png", "assets/ImpFly6.png", "assets/Bullet.png", "assets/Glock17.png", "assets/Glock17A1.png", "assets/Glock17A2.png", "assets/Ak47.png", "assets/DesertEagle.png", "assets/M4a1.png", "assets/Mp5.png", "assets/Scar.png", "assets/GoldenDesertEagle.png", "assets/GoldenAk47.png", "assets/EnemyBullet1.png", "assets/EnemyBullet2.png", "assets/Glock17.wav", "assets/DesertEagle.Wav", "assets/M4a1.Wav", "assets/Mp5.wav", "assets/Ak47.wav", "assets/Scar.Wav"];
+const PRELOAD_ASSETS=["assets/PixelNeon.ttf", "assets/Transparent Button With White Blue Border_Idle.png", "assets/Transparent Button With White Blue Border_Pressed.png", "assets/Line light joystick border.png", "assets/Line light joystick thumb.png", "image/background.png", "image/title.png", "image/playbutton.png", "image/multiplayerbutton.png", "image/inventorybutton.png", "image/shopbutton.png", "image/event.png", "image/money.png", "image/coin.png", "image/Glock17.png", "image/DesertEagle.png", "image/M4a1.png", "image/Mp5.png", "image/Ak47.png", "image/Scar.png", "image/GoldenDesertEagle.png", "image/GoldenAk47.png", "image/CGlock17.gif", "image/CGlock17A1.png", "image/CGlock17A2.png", "image/CGlock17A3.png", "image/CGlock17A4.png", "image/createlobbybutton.png", "image/joinlobbybutton.png", "image/backbutton.png", "image/playgamebutton.png", "image/exitlobbybutton.png", "assets/click.wav", "assets/TheRoom2.png", "assets/Vingette.png", "assets/Player1.png", "assets/Player2.png", "assets/Player22.png", "assets/Player3.png", "assets/Player4.png", "assets/Ghost1.png", "assets/Ghost2.png", "assets/Ghost3.png", "assets/Ghost4.png", "assets/Spider1.png", "assets/Spider2.png", "assets/Spider3.png", "assets/Spider4.png", "assets/ImpFly1.png", "assets/ImpFly2.png", "assets/ImpFly3.png", "assets/ImpFly5.png", "assets/ImpFly6.png", "assets/Bullet.png", "assets/Glock17.png", "assets/Glock17A1.png", "assets/Glock17A2.png", "assets/Ak47.png", "assets/DesertEagle.png", "assets/M4a1.png", "assets/Mp5.png", "assets/Scar.png", "assets/GoldenDesertEagle.png", "assets/GoldenAk47.png", "assets/CGlock17.gif", "assets/CGlock17A1.png", "assets/CGlock17A2.png", "assets/CGlock17A3.png", "assets/CGlock17A4.png", "assets/EnemyBullet1.png", "assets/EnemyBullet2.png", "assets/Glock17.wav", "assets/DesertEagle.Wav", "assets/M4a1.Wav", "assets/Mp5.wav", "assets/Ak47.wav", "assets/Scar.Wav"];
 let assetLoadingPromise=null;
 function showAssetLoader(){const el=document.getElementById("assetLoader");el.classList.add("show");el.setAttribute("aria-hidden","false");document.getElementById("loaderFill").style.width="0%";document.getElementById("loaderPct").textContent="0%";}
 function hideAssetLoader(){const el=document.getElementById("assetLoader");el.classList.remove("show");el.setAttribute("aria-hidden","true");}
@@ -6415,7 +6598,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   function playerActiveSkin(id){
     return id === "desertEagle" ? "goldenDesertEagle" :
-           id === "ak47" ? "goldenAk47" : null;
+           id === "ak47" ? "goldenAk47" :
+           id === "glock17" ? "celestialGlock17" : null;
   }
 
   function playerWeaponStats(pl){
@@ -6432,12 +6616,16 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 
   function playerGunImage(pl){
+    if(pl.skin === "celestialGlock17" && pl.weapon === "glock17") return gunCelestialGlock;
     if(pl.skin === "goldenDesertEagle" && pl.weapon === "desertEagle") return gunGoldenDesertEagle;
     if(pl.skin === "goldenAk47" && pl.weapon === "ak47") return gunGoldenAk47;
     return gunImageForWeapon(pl.weapon);
   }
 
   function playerGunFrame(pl,t){
+    if(pl.skin === "celestialGlock17" && pl.weapon === "glock17") {
+      if(t<0.035)return gunCelestialA1; if(t<0.070)return gunCelestialA2; if(t<0.105)return gunCelestialA3; if(t<0.145)return gunCelestialA4; return gunCelestialGlock;
+    }
     if(pl.weapon === "glock17") return gunFrameForWeapon("glock17",t);
     return playerGunImage(pl);
   }
@@ -7261,6 +7449,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 .profileEditCard.profileEditWeaponCard:hover,
 .profileEditCard.profileEditSkinCard:hover{transform:translateY(-2px)}
 .profileEditCard.profileEditWeaponCard.inLoadout{border-color:#e0a52d}
+.profileEditCard.profileEditWeaponCard.inLoadout.celestialSkin{border-color:#a66cff !important;box-shadow:0 0 7px rgba(166,108,255,.5),2px 2px #000 !important;background:linear-gradient(180deg,rgba(88,43,131,.28),rgba(20,10,34,.28)) !important}
+.profileEditCard.profileEditSkinCard.celestialSkin{border-color:#a66cff !important;box-shadow:0 0 7px rgba(166,108,255,.5),2px 2px #000 !important;background:linear-gradient(180deg,rgba(88,43,131,.28),rgba(20,10,34,.28)) !important}
+.profileEditCard.profileEditSkinCard.celestialSkin .skinRarity{color:#ead8ff !important}
+.profileEditCard.profileEditSkinCard.celestialSkin .invEquip{background:#7b3fd1 !important;border-color:#3d176f !important}
+.profileEditCard.profileEditSkinCard.celestialSkin.equipped .invEquip{background:#45217a !important;border-color:#24103f !important}
 .profileEditCard.profileEditWeaponCard.equipped{border-color:#a9c2a0}
 .profileEditCard.profileEditSkinCard{border-color:#7a5b12}
 .profileEditCard .invName{
@@ -7449,6 +7642,7 @@ document.addEventListener("DOMContentLoaded",()=>{
  function weaponImage(id,skin){
    if(skin==="goldenAk47" && id==="ak47")return "assets/GoldenAk47.png";
    if(skin==="goldenDesertEagle" && id==="desertEagle")return "assets/GoldenDesertEagle.png";
+   if(skin==="celestialGlock17" && id==="glock17")return "image/CGlock17.gif";
    const map={
      glock17:"Glock17.png",
      desertEagle:"DesertEagle.png",
@@ -7476,7 +7670,7 @@ document.addEventListener("DOMContentLoaded",()=>{
    frame.appendChild(im);
 
    const gun=document.createElement("img");
-   gun.className="gelGun";
+   gun.className="gelGun"+(p.skin==="celestialGlock17"&&p.weapon==="glock17"?" celestialGun":"");
    gun.src=weaponImage(p.weapon||"glock17",p.skin);
    gun.alt="";
    frame.appendChild(gun);
@@ -7485,12 +7679,13 @@ document.addEventListener("DOMContentLoaded",()=>{
    nm.className="gelPlayerName";
    nm.textContent=String(p.name||"PLAYER").toUpperCase();
 
-   const weaponNames={glock17:"GLOCK 17",desertEagle:"DESERT EAGLE",m4a1:"M4A1",mp5:"MP5",ak47:"AK-47",scar:"SCAR",goldenDesertEagle:"GOLDEN DEAGLE",goldenAk47:"GOLDEN AK-47"};
+   const weaponNames={glock17:"GLOCK 17",desertEagle:"DESERT EAGLE",m4a1:"M4A1",mp5:"MP5",ak47:"AK-47",scar:"SCAR",goldenDesertEagle:"GOLDEN DEAGLE",goldenAk47:"GOLDEN AK-47",celestialGlock17:"GLOCK 17"};
    const wn=document.createElement("div");
    const isGolden =
       (p.skin==="goldenAk47" && p.weapon==="ak47") ||
       (p.skin==="goldenDesertEagle" && p.weapon==="desertEagle");
-    wn.className="gelWeaponName"+(isGolden?" goldenWeaponName":"");
+    const isCelestial = (p.skin==="celestialGlock17" && p.weapon==="glock17");
+    wn.className="gelWeaponName"+(isGolden?" goldenWeaponName":isCelestial?" celestialWeaponName":"");
     wn.textContent=weaponNames[p.weapon||"glock17"]||String(p.weapon||"GLOCK 17").toUpperCase();
 
    d.append(frame,nm,wn);
@@ -7518,14 +7713,18 @@ document.addEventListener("DOMContentLoaded",()=>{
            let weapon=p.weapon||"glock17";
            let skin=p.skin||null;
            try{
-             const [ws,ss]=await Promise.all([
+             const [ws,ss,os]=await Promise.all([
                db.ref("users/"+uid+"/equippedWeapon").get(),
-               db.ref("users/"+uid+"/equippedSkins").get()
+               db.ref("users/"+uid+"/equippedSkins").get(),
+               db.ref("users/"+uid+"/ownedSkins").get()
              ]);
              const wid=ws.val();
              const skins=ss.val()||{};
+             const owned=Array.isArray(os.val())?new Set(os.val()):new Set();
              if(wid && weaponStats[wid]) weapon=wid;
-             if(skins[weapon]==="goldenAk47" && weapon==="ak47") skin="goldenAk47";
+             if(skins[weapon] && owned.has(skins[weapon])) skin=skins[weapon];
+             else skin=null;
+             if(skins[weapon]==="goldenAk47" && weapon==="ak47" && owned.has("goldenAk47")) skin="goldenAk47";
              else if(skins[weapon]==="goldenDesertEagle" && weapon==="desertEagle") skin="goldenDesertEagle";
              else if(skins[weapon]) skin=skins[weapon];
            }catch(e){}
@@ -7552,7 +7751,11 @@ document.addEventListener("DOMContentLoaded",()=>{
    const startedAt=performance.now();
    // Read the lobby roster BEFORE displaying the screen so all 1-4 players
    // are visible immediately, including each player's equipped weapon.
-   await roster(kind);
+   try{ await roster(kind); }catch(e){
+     console.warn("Loading roster failed; using local player fallback:",e);
+     team.innerHTML="";
+     try{ addPlayer({name:(typeof myName!=="undefined"&&myName)?myName:"PLAYER",weapon:(typeof currentWeapon!=="undefined"&&currentWeapon)?currentWeapon:"glock17",skin:(typeof equippedSkins!=="undefined"&&equippedSkins)?equippedSkins[currentWeapon]:null},true); }catch(_e){}
+   }
    tip.textContent=tips[Math.floor(Math.random()*tips.length)];
    fill.style.width="0%";
    pct.textContent="0%";
@@ -7773,12 +7976,14 @@ function profileRenderLoadout(loadout,skinsMap){
     if(id){
       const skin=skinsMap?.[id]||null;
       const isGolden=(skin==="goldenAk47"||skin==="goldenDesertEagle");
+      const isCelestial=(skin==="celestialGlock17"&&id==="glock17");
       if(isGolden)d.classList.add("golden");
+      if(isCelestial)d.classList.add("celestial");
 
       const badge=document.createElement("div");
       badge.className="profileWeaponBadge";
-      badge.textContent="PREMIUM";
-      if(!isGolden)badge.style.visibility="hidden";
+      badge.textContent=isCelestial?"CELESTIAL":"PREMIUM";
+      if(!isGolden&&!isCelestial)badge.style.visibility="hidden";
 
       const img=document.createElement("img");
       img.src=profileWeaponImage(id,skin);
@@ -7923,6 +8128,7 @@ async function showProfileEditor(){
 
 function hideProfileEditor(){document.getElementById("profileEditOverlay").classList.remove("show")}
 function profileWeaponImage(id,skin){
+  if(skin==="celestialGlock17" && id==="glock17")return "image/CGlock17.gif";
   if(skin==="goldenAk47" && id==="ak47")return "image/GoldenAk47.png";
   if(skin==="goldenDesertEagle" && id==="desertEagle")return "image/GoldenDesertEagle.png";
   const map={
@@ -7966,7 +8172,7 @@ function renderProfileEditor(){
       if(skinId&&skinDefs[skinId]){
         const sk=document.createElement("small");
         sk.className="slotSkinName";
-        sk.textContent="SKIN: "+(skinId==="goldenAk47"?"GOLDEN AK47":"GOLDEN DEAGLE");
+        sk.textContent="SKIN: "+(skinId==="celestialGlock17"?"CELESTIAL":(skinId==="goldenAk47"?"GOLDEN AK47":"GOLDEN DEAGLE"));
         slot.append(sk);
       }
     }else{
@@ -7992,7 +8198,8 @@ function renderProfileEditor(){
     const card=document.createElement("div");
     card.className="profileEditCard profileEditWeaponCard"+
       (profileLoadout.includes(id)?" inLoadout":"")+
-      (currentWeapon===id?" equipped":"");
+      (currentWeapon===id?" equipped":"")+
+      (equippedSkins?.[id]==="celestialGlock17"?" celestialSkin":"");
     card.dataset.weapon=id;
     card.dataset.type="weapon";
 
@@ -8022,18 +8229,19 @@ function renderProfileEditor(){
 
     const card=document.createElement("div");
     card.className="profileEditCard profileEditSkinCard"+
-      (equippedSkins?.[def.weapon]===skinId?" equipped":"");
+      (equippedSkins?.[def.weapon]===skinId?" equipped":"")+
+      (skinId==="celestialGlock17"?" celestialSkin":"");
     card.dataset.skin=skinId;
     card.dataset.weapon=def.weapon;
     card.dataset.type="skin";
 
     const rarity=document.createElement("div");
-    rarity.className="skinRarity premium";
-    rarity.textContent="PREMIUM";
+    rarity.className="skinRarity "+(skinId==="celestialGlock17"?"celestial":"premium");
+    rarity.textContent=skinId==="celestialGlock17"?"CELESTIAL":"PREMIUM";
 
     const name=document.createElement("div");
     name.className="invName";
-    name.textContent=skinId==="goldenAk47"?"GOLDEN AK47":"GOLDEN DEAGLE";
+    name.textContent=skinId==="celestialGlock17"?"GLOCK 17":(skinId==="goldenAk47"?"GOLDEN AK47":"GOLDEN DEAGLE");
 
     const img=document.createElement("img");
     img.className="invWeapon skinImg";
@@ -8249,3 +8457,286 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 </body>
 </html>
+
+<style id="celestial-skin-button-colors">
+.invCard.skinCard[data-skin="celestialGlock17"] .skinEquip:not(:disabled){background:#7b3fd1 !important;border-color:#3d176f !important;color:#fff !important;box-shadow:3px 3px #12091e !important}
+.invCard.skinCard[data-skin="celestialGlock17"].equipped .skinEquip{background:#45217a !important;border-color:#24103f !important;color:#eeeaff !important}
+.invCard.skinCard[data-skin="goldenDesertEagle"] .skinEquip:not(:disabled),
+.invCard.skinCard[data-skin="goldenAk47"] .skinEquip:not(:disabled){background:#d4a928 !important;border-color:#6b5010 !important;color:#1b1405 !important}
+.invCard.skinCard[data-skin="goldenDesertEagle"].equipped .skinEquip,
+.invCard.skinCard[data-skin="goldenAk47"].equipped .skinEquip{background:#765b12 !important;border-color:#382b07 !important;color:#fff !important}
+.invCard.skinCard[data-skin="celestialGlock17"] .skinEquip:disabled,
+.invCard.skinCard[data-skin="goldenDesertEagle"] .skinEquip:disabled,
+.invCard.skinCard[data-skin="goldenAk47"] .skinEquip:disabled{background:#5b6577 !important;color:#d7dce5 !important;border-color:#303743 !important}
+.profileEditSkinCard[data-skin="celestialGlock17"] .profileEditAction{background:#7b3fd1 !important;border-color:#3d176f !important}
+.profileEditSkinCard[data-skin="celestialGlock17"].equipped .profileEditAction{background:#45217a !important;border-color:#24103f !important}
+.profileWeapon.celestial{border-color:#a66cff !important;box-shadow:4px 4px #000,0 0 12px rgba(166,108,255,.35) !important}
+.profileWeapon.celestial .profileWeaponBadge{color:#ead8ff !important;background:#542080 !important;border-color:#b875ff !important}
+</style>
+<style id="celestial-event-addon">
+/* ===================== CELESTIAL EVENT ===================== */
+#eventHubOverlay,#celestialEventPage{
+  position:absolute;inset:0;z-index:75;display:none;place-items:center;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(150,70,255,.24),transparent 45%),
+    linear-gradient(180deg,rgba(7,3,18,.96),rgba(3,4,12,.98));
+  color:#fff;font-family:"NeonPixel","Courier New",monospace;
+  image-rendering:pixelated;overflow:hidden;
+}
+#eventHubOverlay.show,#celestialEventPage.show{display:grid}
+.eventHubBox{
+  width:min(88vw,610px);height:min(78vh,360px);position:relative;
+  border:3px solid #8d58d9;background:rgba(10,7,23,.95);
+  box-shadow:7px 7px #000,0 0 28px rgba(157,81,255,.28),inset 0 0 0 2px rgba(255,255,255,.08);
+  overflow:hidden;padding:16px;
+}
+.eventHubTitle{
+  text-align:center;font-size:18px;letter-spacing:3px;
+  text-shadow:3px 3px #000,0 0 12px rgba(191,124,255,.65);
+}
+.eventHubSub{text-align:center;color:#a99abf;font-size:5px;margin-top:5px;letter-spacing:1px}
+.eventHubCards{
+  position:absolute;left:8%;right:8%;top:23%;bottom:15%;
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.eventHubCard{
+  position:relative;overflow:hidden;border:3px solid #6f607f;background:#15101f;
+  box-shadow:4px 4px #000;cursor:pointer;text-align:left;padding:0;
+  color:#fff;font-family:inherit;
+}
+.eventHubCard:hover{transform:translateY(-2px);filter:brightness(1.12)}
+.eventHubCard .eventCardArt{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.48;
+}
+.eventHubCard .eventCardShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.9))}
+.eventHubCard .eventCardText{position:absolute;left:10px;right:10px;bottom:10px;z-index:2}
+.eventHubCard .eventMiniTag{font-size:5px;letter-spacing:2px;color:#ddd}
+.eventHubCard .eventMiniTitle{font-size:13px;letter-spacing:2px;margin-top:4px;text-shadow:2px 2px #000}
+.eventHubCard .eventMiniDesc{font-size:4.5px;color:#bdb6c8;margin-top:4px;line-height:1.5}
+.eventHubCard.golden{border-color:#d4aa42}
+.eventHubCard.golden .eventMiniTitle{color:#ffe29a}
+.eventHubCard.celestial{border-color:#a66cff;box-shadow:4px 4px #000,0 0 18px rgba(166,108,255,.3)}
+.eventHubCard.celestial .eventMiniTitle{color:#d9b9ff;text-shadow:2px 2px #000,0 0 8px #9d4dff}
+.eventHubClose,.celestialBack{
+  position:absolute;left:50%;bottom:7%;transform:translateX(-50%);
+  min-width:90px;height:28px;border:2px solid #8d86a0;background:#181322;color:#fff;
+  font:6px "NeonPixel","Courier New",monospace;cursor:pointer;box-shadow:3px 3px #000;
+}
+.eventHubClose:active,.celestialBack:active{transform:translateX(-50%) translate(2px,2px)}
+#celestialEventPage{background:
+  radial-gradient(circle at 50% 35%,rgba(142,59,255,.25),transparent 42%),
+  linear-gradient(180deg,#090317,#03040b);
+}
+.celestialBox{
+  width:min(90vw,620px);height:min(82vh,380px);position:relative;
+  border:3px solid #a66cff;background:rgba(8,5,19,.94);
+  box-shadow:7px 7px #000,0 0 35px rgba(153,79,255,.35),inset 0 0 0 2px rgba(230,206,255,.16);
+  overflow:hidden;
+}
+.celestialBox:before{
+  content:"";position:absolute;inset:7px;border:1px solid rgba(208,170,255,.35);pointer-events:none;
+}
+.celestialTop{text-align:center;padding:12px 12px 4px;position:relative;z-index:2}
+.celestialTitle{font-size:20px;letter-spacing:4px;color:#e7d3ff;text-shadow:3px 3px #000,0 0 12px #a451ff}
+.celestialSub{font-size:5px;color:#b9a8cc;letter-spacing:1.5px;margin-top:4px}
+.celestialMain{
+  position:absolute;left:7%;right:7%;top:20%;bottom:17%;
+  display:grid;grid-template-columns:42% 58%;gap:10px;align-items:center;
+}
+.celestialPreview{
+  position:relative;height:100%;display:grid;place-items:center;
+  border:2px solid #6f43a6;background:radial-gradient(circle,rgba(163,89,255,.18),rgba(9,6,20,.9));
+  box-shadow:inset 0 0 22px rgba(157,78,255,.18);
+}
+.celestialPreview img{width:78%;max-height:72%;object-fit:contain;image-rendering:pixelated;
+  filter:drop-shadow(0 0 9px rgba(170,95,255,.8));}
+.celestialPreview:after{
+  content:"✦";position:absolute;top:8px;right:10px;font-size:14px;color:#d9b5ff;
+  animation:celestialSpark .9s steps(2) infinite;
+}
+@keyframes celestialSpark{0%,100%{opacity:.45;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+.celestialInfo{padding:5px 8px}
+.celestialBadge{
+  display:inline-block;padding:4px 8px;border:2px solid #b278ff;background:#25113c;
+  color:#e7cfff;font-size:5px;letter-spacing:2px;box-shadow:2px 2px #000;
+}
+.celestialName{font-size:15px;letter-spacing:1px;margin-top:10px;color:#fff;
+  text-shadow:2px 2px #000,0 0 8px rgba(173,91,255,.7);}
+.celestialDesc{font-size:5px;line-height:1.8;color:#aaa0b8;margin-top:7px}
+.celestialFeatures{margin-top:9px;display:grid;gap:4px}
+.celestialFeature{font-size:5px;color:#ded3ea;padding:5px 6px;border-left:3px solid #9d5cff;background:rgba(88,43,131,.18)}
+.celestialClaim{
+  margin-top:11px;width:100%;height:34px;border:2px solid #c99bff;background:linear-gradient(#6d35a8,#432069);
+  color:#fff;font:7px "NeonPixel",monospace;letter-spacing:1px;box-shadow:3px 3px #000;cursor:pointer;
+}
+.celestialClaim:hover{filter:brightness(1.18)}
+.celestialClaim:disabled{opacity:.65;cursor:default}
+.celestialStatus{text-align:center;position:absolute;left:8%;right:8%;bottom:8%;font-size:5px;color:#b7a9c6}
+.celestialBack{bottom:7%;background:#151020;border-color:#7c6395}
+.invCard.skinCard[data-skin="celestialGlock17"],
+.shopCard.skinCard[data-skin="celestialGlock17"]{
+  border-color:#a66cff !important;
+  background:linear-gradient(180deg,#24123a,#120a20) !important;
+  box-shadow:4px 4px #05060a,inset 0 0 0 1px #8b55d1,0 0 12px rgba(155,82,255,.18) !important;
+}
+.invCard.skinCard[data-skin="celestialGlock17"] .invName,
+.shopCard.skinCard[data-skin="celestialGlock17"] .shopName{
+  color:#e6ceff !important;text-shadow:2px 2px #000,0 0 7px rgba(177,93,255,.8) !important;
+}
+.invCard.skinCard[data-skin="celestialGlock17"] .skinImg{
+  filter:drop-shadow(0 0 8px rgba(173,83,255,.85)) !important;
+}
+.invCard.skinCard[data-skin="celestialGlock17"].owned{
+  animation:celestialCardGlow 1.35s steps(2) infinite !important;
+}
+@keyframes celestialCardGlow{
+  0%,100%{box-shadow:4px 4px #05060a,inset 0 0 0 1px #8b55d1,0 0 7px rgba(155,82,255,.28)}
+  50%{box-shadow:4px 4px #05060a,inset 0 0 0 2px #c99bff,0 0 17px rgba(181,91,255,.55)}
+}
+#eventLobbyBtn{
+  border-color:#9a6ae0 !important;background:linear-gradient(#2a1941,#171021) !important;
+  box-shadow:4px 4px #05060a,inset 0 0 0 1px #6e49a0,0 0 9px rgba(152,85,255,.25) !important;
+}
+@media(max-width:700px){
+  .eventHubBox{height:min(82vh,330px);padding:12px}
+  .eventHubCards{left:5%;right:5%;gap:7px}
+  .eventHubCard .eventMiniTitle{font-size:10px}
+  .celestialBox{height:min(86vh,350px)}
+  .celestialMain{left:5%;right:5%;top:21%;bottom:17%;grid-template-columns:40% 60%;gap:6px}
+  .celestialName{font-size:11px}.celestialDesc,.celestialFeature,.celestialStatus{font-size:4.2px}
+}
+</style>
+
+<div id="eventHubOverlay" aria-hidden="true">
+  <div class="eventHubBox">
+    <div class="eventHubTitle">EVENT</div>
+    <div class="eventHubSub">PILIH EVENT YANG SEDANG BERLANGSUNG</div>
+    <div class="eventHubCards">
+      <button type="button" class="eventHubCard golden" id="openGoldenEvent">
+        <img class="eventCardArt" src="image/GoldenDesertEagle.png" alt="">
+        <span class="eventCardShade"></span>
+        <span class="eventCardText">
+          <span class="eventMiniTag">EVENT 01</span>
+          <span class="eventMiniTitle">GOLDEN</span>
+          <span class="eventMiniDesc">GOLDEN DESERT EAGLE • SPIN EVENT</span>
+        </span>
+      </button>
+      <button type="button" class="eventHubCard celestial" id="openCelestialEvent">
+        <img class="eventCardArt" src="image/CGlock17.gif" alt="">
+        <span class="eventCardShade"></span>
+        <span class="eventCardText">
+          <span class="eventMiniTag">EVENT 02</span>
+          <span class="eventMiniTitle">CELESTIAL</span>
+          <span class="eventMiniDesc">CELESTIAL GLOCK17 • LIMITED EVENT</span>
+        </span>
+      </button>
+    </div>
+    <button type="button" class="eventHubClose" id="closeEventHub">BACK</button>
+  </div>
+</div>
+
+<div id="celestialEventPage" aria-hidden="true">
+  <div class="celestialBox">
+    <div class="celestialTop">
+      <div class="celestialTitle">CELESTIAL</div>
+      <div class="celestialSub">LIMITED EVENT • THE HEAVENLY GLOCK17</div>
+    </div>
+    <div class="celestialMain">
+      <div class="celestialPreview">
+        <img src="image/CGlock17.gif" alt="Celestial Glock17">
+      </div>
+      <div class="celestialInfo">
+        <div class="celestialBadge">CELESTIAL • LIMITED</div>
+        <div class="celestialName">GLOCK 17</div>
+        <div class="celestialDesc">GLOCK 17 DENGAN AURA SURGAWI, SAYAP CAHAYA, DAN EFEK TEMBAKAN UNGU.</div>
+        <div class="celestialFeatures">
+          <div class="celestialFeature">✦ GIF WEAPON • ANIMASI HIDUP</div>
+          <div class="celestialFeature">✦ 4-FRAME FIRING ANIMATION</div>
+          <div class="celestialFeature">✦ PURPLE CELESTIAL MUZZLE</div>
+        </div>
+        <button type="button" class="celestialClaim" id="celestialClaimBtn">CLAIM REWARD</button>
+      </div>
+    </div>
+    <div class="celestialStatus" id="celestialStatus">EVENT REWARD • GLOCK 17</div>
+    <button type="button" class="celestialBack" id="celestialBackBtn">BACK TO EVENT</button>
+  </div>
+</div>
+
+<script id="celestial-event-addon-js">
+(function(){
+  function showHub(){
+    const menu=document.getElementById("menu");
+    const hub=document.getElementById("eventHubOverlay");
+    const page=document.getElementById("celestialEventPage");
+    if(page)page.classList.remove("show");
+    if(menu)menu.style.display="none";
+    if(hub){hub.classList.add("show");hub.setAttribute("aria-hidden","false");}
+  }
+  function hideHub(){
+    const hub=document.getElementById("eventHubOverlay");
+    if(hub){hub.classList.remove("show");hub.setAttribute("aria-hidden","true");}
+    const menu=document.getElementById("menu");
+    if(menu){
+      menu.style.display="grid";menu.classList.remove("lobbyLeaving");menu.classList.add("lobbyEntering");
+      setTimeout(()=>menu.classList.remove("lobbyEntering"),1150);
+    }
+  }
+  function openCelestial(){
+    const hub=document.getElementById("eventHubOverlay");
+    const page=document.getElementById("celestialEventPage");
+    if(hub)hub.classList.remove("show");
+    if(page){page.classList.add("show");page.setAttribute("aria-hidden","false");}
+    updateCelestialClaim();
+  }
+  function backToHub(){
+    const page=document.getElementById("celestialEventPage");
+    if(page)page.classList.remove("show");
+    showHub();
+  }
+  function updateCelestialClaim(){
+    const b=document.getElementById("celestialClaimBtn");
+    const st=document.getElementById("celestialStatus");
+    const owned=typeof isSkinOwned==="function"&&isSkinOwned("celestialGlock17");
+    if(b){
+      b.disabled=owned;
+      b.textContent=owned?"REWARD CLAIMED • EQUIP DI INVENTORY":"CLAIM REWARD";
+    }
+    if(st)st.textContent=owned?"CELESTIAL GLOCK17 SUDAH DIMILIKI • BUKA INVENTORY UNTUK MEMAKAINYA":"EVENT REWARD • GLOCK 17";
+  }
+  async function claimCelestial(){
+    if(!myUid){
+      const st=document.getElementById("celestialStatus");
+      if(st)st.textContent="LOGIN DULU UNTUK MENGAMBIL REWARD.";
+      return;
+    }
+    if(isSkinOwned("celestialGlock17")){updateCelestialClaim();return;}
+    ownedSkins.add("celestialGlock17");
+    try{await saveOwnedSkins();}catch(e){}
+    refreshSkinUI();
+    updateCelestialClaim();
+    const st=document.getElementById("celestialStatus");
+    if(st)st.textContent="✦ CELESTIAL GLOCK17 BERHASIL DIDAPATKAN ✦";
+  }
+
+  // Capture-phase override: the existing Golden button stays intact, but now
+  // opens an event-selection hub first.
+  document.addEventListener("click",function(e){
+    const b=e.target.closest("#eventLobbyBtn");
+    if(!b)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    showHub();
+  },true);
+
+  document.addEventListener("DOMContentLoaded",function(){
+    document.getElementById("openGoldenEvent")?.addEventListener("click",function(){
+      const hub=document.getElementById("eventHubOverlay");
+      if(hub)hub.classList.remove("show");
+      showGoldenEventPage();
+    });
+    document.getElementById("openCelestialEvent")?.addEventListener("click",openCelestial);
+    document.getElementById("closeEventHub")?.addEventListener("click",hideHub);
+    document.getElementById("celestialBackBtn")?.addEventListener("click",backToHub);
+    document.getElementById("celestialClaimBtn")?.addEventListener("click",claimCelestial);
+  });
+})();
+</script>
