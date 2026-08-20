@@ -3627,6 +3627,11 @@ canvas{animation:none!important}
         <img class="invWeapon" src="image/Scar.png" alt="Scar">
         <button class="invEquip" disabled>TERKUNCI</button>
       </div>
+      <div class="invCard locked" data-weapon="ar15">
+        <div class="invName">AR15</div>
+        <img class="invWeapon" src="image/AR15.png" alt="AR15">
+        <button class="invEquip" disabled>TERKUNCI</button>
+      </div>
     </div>
     <div class="invGrid" data-invpanel="skins" style="display:none">
       <div class="invCard skinCard locked" data-skin="goldenDesertEagle">
@@ -3706,6 +3711,13 @@ canvas{animation:none!important}
         <img class="shopWeaponImg" src="image/Scar.png" alt="Scar">
         <div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>350</span></div>
         <button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">350</button>
+      </div>
+      <div class="shopCard" data-weapon="ar15">
+        <span class="shopOwnedDot" aria-hidden="true" style="display:none"></span>
+        <div class="shopName">AR15</div>
+        <img class="shopWeaponImg" src="image/AR15.png" alt="AR15">
+        <div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>400</span></div>
+        <button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">400</button>
       </div>
     </div>
     <div class="shopGrid" data-shoppanel="skins" style="display:none">
@@ -4097,7 +4109,7 @@ const spiderFrames=["Spider1.png","Spider2.png","Spider3.png","Spider4.png"].map
 const impFrames=["ImpFly1.png","ImpFly2.png","ImpFly3.png","ImpFly5.png","ImpFly6.png"].map(img);
 const bullet=img("Bullet.png");
 const gunGlock=img("Glock17.png"),gunA1=img("Glock17A1.png"),gunA2=img("Glock17A2.png"),gunAk47=img("Ak47.png");
-const gunDesertEagle=img("DesertEagle.png"),gunM4a1=img("M4a1.png"),gunMp5=img("Mp5.png"),gunScar=img("Scar.png");
+const gunDesertEagle=img("DesertEagle.png"),gunM4a1=img("M4a1.png"),gunMp5=img("Mp5.png"),gunScar=img("Scar.png"),gunAR15=img("AR15.png");
 let currentWeapon="glock17";
 const weaponStats={
   glock17:{damage:25,fireInterval:.32},
@@ -4105,11 +4117,12 @@ const weaponStats={
   m4a1:{damage:32,fireInterval:.22},
   mp5:{damage:32,fireInterval:.15},
   ak47:{damage:40,fireInterval:.22},
-  scar:{damage:50,fireInterval:.15}
+  scar:{damage:50,fireInterval:.15},
+  ar15:{damage:50,fireInterval:.34}
 };
-const weaponPrices={glock17:0,desertEagle:50,m4a1:100,mp5:150,ak47:200,scar:350};
+const weaponPrices={glock17:0,desertEagle:50,m4a1:100,mp5:150,ak47:200,scar:350,ar15:120};
 let ownedWeapons=new Set(["glock17"]);
-const VALID_WEAPONS=["glock17","desertEagle","m4a1","mp5","ak47","scar"];
+const VALID_WEAPONS=["glock17","desertEagle","m4a1","mp5","ak47","scar","ar15"];
 function ownedKey(uid=myUid){return "wdOwnedWeapons:"+String(uid||"guest")}
 function weaponKey(uid=myUid){return "wdWeapon:"+String(uid||"guest")}
 function isOwned(id){return id==="glock17"||ownedWeapons.has(id)}
@@ -4178,6 +4191,8 @@ function getActiveWeaponStats(id){
   }else if(skinId==="goldenAk47"){
     d+=1;
     rate+=1;
+  }else if(skinId==="celestialGlock17" && id==="glock17"){
+    d=50;
   }
   return {damage:d,fireInterval:1/rate,fireRate:rate};
 }
@@ -4306,6 +4321,7 @@ function activeGunImage(){
     case "mp5":return gunMp5;
     case "ak47":return gunAk47;
     case "scar":return gunScar;
+    case "ar15":return gunAR15;
     default:return gunGlock;
   }
 }
@@ -4945,7 +4961,7 @@ function sprite(im,x,y,w,h,a=0,mirrorX=false){
 function gunImageForWeapon(id){
   const sid=equippedSkins&&equippedSkins[id];
   if(id==="glock17"&&sid==="celestialGlock17"&&isSkinOwned("celestialGlock17"))return gunCelestialGlock;
-  switch(id){case "desertEagle":return gunDesertEagle;case "m4a1":return gunM4a1;case "mp5":return gunMp5;case "ak47":return gunAk47;case "scar":return gunScar;default:return gunGlock;}
+  switch(id){case "desertEagle":return gunDesertEagle;case "m4a1":return gunM4a1;case "mp5":return gunMp5;case "ak47":return gunAk47;case "scar":return gunScar;case "ar15":return gunAR15;default:return gunGlock;}
 }
 function gunFrameForWeapon(id,t){
   if(id==="glock17"&&equippedSkins&&equippedSkins.glock17==="celestialGlock17"&&isSkinOwned("celestialGlock17")){
@@ -6612,6 +6628,10 @@ document.addEventListener("DOMContentLoaded",()=>{
       damage += 1;
       rate += 1;
     }
+    if(pl.skin === "celestialGlock17" && wid === "glock17"){
+      damage = 50;
+      rate = 1 / .15;
+    }
     return {damage, fireInterval:1/rate, fireRate:rate};
   }
 
@@ -7650,6 +7670,7 @@ document.addEventListener("DOMContentLoaded",()=>{
      mp5:"Mp5.png",
      ak47:"Ak47.png",
      scar:"Scar.png",
+     ar15:"AR15.png",
      goldenDesertEagle:"GoldenDesertEagle.png",
      goldenAk47:"GoldenAk47.png"
    };
@@ -7679,7 +7700,7 @@ document.addEventListener("DOMContentLoaded",()=>{
    nm.className="gelPlayerName";
    nm.textContent=String(p.name||"PLAYER").toUpperCase();
 
-   const weaponNames={glock17:"GLOCK 17",desertEagle:"DESERT EAGLE",m4a1:"M4A1",mp5:"MP5",ak47:"AK-47",scar:"SCAR",goldenDesertEagle:"GOLDEN DEAGLE",goldenAk47:"GOLDEN AK-47",celestialGlock17:"GLOCK 17"};
+   const weaponNames={glock17:"GLOCK 17",desertEagle:"DESERT EAGLE",m4a1:"M4A1",mp5:"MP5",ak47:"AK-47",scar:"SCAR",ar15:"AR15",goldenDesertEagle:"GOLDEN DEAGLE",goldenAk47:"GOLDEN AK-47",celestialGlock17:"GLOCK 17"};
    const wn=document.createElement("div");
    const isGolden =
       (p.skin==="goldenAk47" && p.weapon==="ak47") ||
@@ -7927,7 +7948,7 @@ let profileLoadout = [];
 
 const profileWeaponLabels = {
   glock17:"GLOCK 17", desertEagle:"DESERT EAGLE", m4a1:"M4A1",
-  mp5:"MP5", ak47:"AK-47", scar:"SCAR"
+  mp5:"MP5", ak47:"AK-47", scar:"SCAR", ar15:"AR15"
 };
 
 async function loadProfileLoadout(){
@@ -8138,6 +8159,7 @@ function profileWeaponImage(id,skin){
     mp5:"Mp5.png",
     ak47:"Ak47.png",
     scar:"Scar.png",
+    ar15:"AR15.png",
     goldenDesertEagle:"GoldenDesertEagle.png",
     goldenAk47:"GoldenAk47.png"
   };
