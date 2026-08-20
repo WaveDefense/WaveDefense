@@ -8499,22 +8499,20 @@ document.addEventListener("DOMContentLoaded",()=>{
 /* ===================== CELESTIAL EVENT ===================== */
 #eventHubOverlay,#celestialEventPage{
   position:absolute;inset:0;z-index:75;display:none;place-items:center;
-  background:
-    radial-gradient(circle at 50% 20%,rgba(150,70,255,.24),transparent 45%),
-    linear-gradient(180deg,rgba(7,3,18,.96),rgba(3,4,12,.98));
+  background:#05070d url("assets/TheRoom2.png") center/cover no-repeat;
   color:#fff;font-family:"NeonPixel","Courier New",monospace;
   image-rendering:pixelated;overflow:hidden;
 }
 #eventHubOverlay.show,#celestialEventPage.show{display:grid}
 .eventHubBox{
   width:min(88vw,610px);height:min(78vh,360px);position:relative;
-  border:3px solid #8d58d9;background:rgba(10,7,23,.95);
-  box-shadow:7px 7px #000,0 0 28px rgba(157,81,255,.28),inset 0 0 0 2px rgba(255,255,255,.08);
+  border:3px solid #737d94;background:rgba(10,12,18,.94);
+  box-shadow:7px 7px #000;
   overflow:hidden;padding:16px;
 }
 .eventHubTitle{
   text-align:center;font-size:18px;letter-spacing:3px;
-  text-shadow:3px 3px #000,0 0 12px rgba(191,124,255,.65);
+  text-shadow:3px 3px #000;
 }
 .eventHubSub{text-align:center;color:#a99abf;font-size:5px;margin-top:5px;letter-spacing:1px}
 .eventHubCards{
@@ -8535,6 +8533,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 .eventHubCard .eventMiniTag{font-size:5px;letter-spacing:2px;color:#ddd}
 .eventHubCard .eventMiniTitle{font-size:13px;letter-spacing:2px;margin-top:4px;text-shadow:2px 2px #000}
 .eventHubCard .eventMiniDesc{font-size:4.5px;color:#bdb6c8;margin-top:4px;line-height:1.5}
+.eventHubCard.mystery{border-color:#737d94;background:rgba(10,12,18,.72);display:grid;place-items:center;cursor:default}
+.eventHubCard.mystery:hover{transform:none;filter:none}
+.mysteryQuestion{font-family:"NeonPixel","Courier New",monospace;font-size:42px;line-height:1;color:#b9bfca;text-shadow:3px 3px #000}
 .eventHubCard.golden{border-color:#d4aa42}
 .eventHubCard.golden .eventMiniTitle{color:#ffe29a}
 .eventHubCard.celestial{border-color:#a66cff;box-shadow:4px 4px #000,0 0 18px rgba(166,108,255,.3)}
@@ -8616,8 +8617,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   50%{box-shadow:4px 4px #05060a,inset 0 0 0 2px #c99bff,0 0 17px rgba(181,91,255,.55)}
 }
 #eventLobbyBtn{
-  border-color:#9a6ae0 !important;background:linear-gradient(#2a1941,#171021) !important;
-  box-shadow:4px 4px #05060a,inset 0 0 0 1px #6e49a0,0 0 9px rgba(152,85,255,.25) !important;
+  border-color:#737d94 !important;background:#202636 !important;
+  box-shadow:3px 3px #05060a !important;
 }
 @media(max-width:700px){
   .eventHubBox{height:min(82vh,330px);padding:12px}
@@ -8643,15 +8644,9 @@ document.addEventListener("DOMContentLoaded",()=>{
           <span class="eventMiniDesc">GOLDEN DESERT EAGLE • SPIN EVENT</span>
         </span>
       </button>
-      <button type="button" class="eventHubCard celestial" id="openCelestialEvent">
-        <img class="eventCardArt" src="image/CGlock17.gif" alt="">
-        <span class="eventCardShade"></span>
-        <span class="eventCardText">
-          <span class="eventMiniTag">EVENT 02</span>
-          <span class="eventMiniTitle">CELESTIAL</span>
-          <span class="eventMiniDesc">CELESTIAL GLOCK17 • LIMITED EVENT</span>
-        </span>
-      </button>
+      <div class="eventHubCard mystery" aria-label="Event berikutnya">
+        <span class="mysteryQuestion">?</span>
+      </div>
     </div>
     <button type="button" class="eventHubClose" id="closeEventHub">BACK</button>
   </div>
@@ -8755,7 +8750,6 @@ document.addEventListener("DOMContentLoaded",()=>{
       if(hub)hub.classList.remove("show");
       showGoldenEventPage();
     });
-    document.getElementById("openCelestialEvent")?.addEventListener("click",openCelestial);
     document.getElementById("closeEventHub")?.addEventListener("click",hideHub);
     document.getElementById("celestialBackBtn")?.addEventListener("click",backToHub);
     document.getElementById("celestialClaimBtn")?.addEventListener("click",claimCelestial);
