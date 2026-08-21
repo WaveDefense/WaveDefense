@@ -440,243 +440,6 @@ html,body,button,input,select,textarea{
 .invCard.equipped .invEquip{background:#2c9b45;color:#fff;border-color:#0b2810}
 @media(max-width:700px){.invFrame{inset:2.5%}.invBack{width:84px;height:35px;font-size:6px}.invSide{gap:6px}.invTab{height:48px;font-size:6px}.invGrid{gap:6px;grid-auto-rows:minmax(90px,1fr)}.invName{font-size:6px;padding-top:6px}.invWeapon{max-height:42px}.invEquip{height:25px;font-size:6px}.invCount{bottom:39px;font-size:6px}}
 
-/* ===================== MULTIPLAYER LOBBY ===================== */
-.mpOverlay{position:absolute;inset:0;z-index:25;display:none;place-items:center;background:rgba(4,4,8,.8)}
-.mpOverlay.show{display:grid}
-.mpBox{width:min(92%,290px);max-height:88%;overflow:auto;padding:18px 16px;background:rgba(8,9,15,.96);border:1px solid rgba(255,255,255,.82);box-shadow:6px 6px 0 rgba(0,0,0,.45);text-align:center}
-.mpTitle{font-size:11px;color:#fff;text-shadow:2px 2px #000;margin-bottom:12px;letter-spacing:1px}
-.mbtn2{font-family:"NeonPixel","Courier New",monospace;display:block;width:100%;padding:10px;margin:6px 0;border:1px solid #fff;background:#171a24;color:#fff;font-size:7px;cursor:pointer;touch-action:manipulation;box-shadow:3px 3px 0 #05060a}
-.mbtn2:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #05060a}
-.mbtn2:disabled{opacity:.4;cursor:default}
-.mbtn2.mpBack{background:#2a1520}
-.mpSlots{display:flex;flex-direction:column;gap:6px;margin:10px 0}
-.mpSlot{padding:8px;border:1px solid rgba(255,255,255,.4);font-size:7px;color:#fff;text-align:left;background:#12141c}
-.mpSlot.empty{color:#666;font-style:italic}
-.mpSlot.host{color:#7fd1ff}
-.mpRoomCode{color:#ffd34d}
-
-
-/* ================= MULTIPLAYER UI UPGRADE =================
-   Visual-only: existing Firebase/gameplay JS IDs are preserved.
-*/
-#mpMenu,
-#mpLobbyRoom{
-  background:rgba(0,0,0,.48);
-  backdrop-filter:none;
-}
-
-#mpMenu .mpBox,
-#mpLobbyRoom .mpBox{
-  position:relative;
-  width:min(62vw,250px);
-  max-height:none;
-  overflow:visible;
-  padding:16px 14px 14px;
-  background:rgba(7,8,13,.94);
-  border:2px solid #596071;
-  box-shadow:
-    5px 5px 0 #05060a,
-    inset 0 0 0 1px rgba(255,255,255,.08);
-  text-align:center;
-}
-
-#mpMenu .mpBox::before,
-#mpLobbyRoom .mpBox::before{
-  content:"";
-  position:absolute;
-  inset:5px;
-  pointer-events:none;
-  border:1px solid rgba(255,255,255,.035);
-}
-
-#mpMenu .mpTitle,
-#mpLobbyRoom .mpTitle{
-  position:relative;
-  z-index:1;
-  margin:0 0 13px;
-  font:16px "NeonPixel","Courier New",monospace;
-  line-height:1;
-  letter-spacing:1px;
-  color:#fff;
-  text-shadow:3px 3px 0 #000;
-}
-
-#mpLobbyRoom .mpTitle{
-  margin-bottom:11px;
-}
-
-#mpMenu .mpImageButtons,
-#mpLobbyRoom .mpImageButtons{
-  position:relative;
-  z-index:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
-}
-
-#mpMenu .mpImgBtn,
-#mpLobbyRoom .mpImgBtn{
-  display:block;
-  width:100%;
-  margin:3px 0;
-  padding:0;
-  border:0;
-  outline:0;
-  background:transparent;
-  box-shadow:none;
-  cursor:pointer;
-  touch-action:manipulation;
-}
-
-#mpMenu .mpImgBtn img,
-#mpLobbyRoom .mpImgBtn img{
-  display:block;
-  width:100%;
-  height:auto;
-  image-rendering:pixelated;
-  user-select:none;
-  -webkit-user-drag:none;
-}
-
-#mpMenu .mpImgBtn:active,
-#mpLobbyRoom .mpImgBtn:active{
-  transform:translate(2px,2px);
-}
-
-#mpMenu .mpImgBtn:focus-visible,
-#mpLobbyRoom .mpImgBtn:focus-visible{
-  outline:2px solid rgba(255,211,77,.85);
-  outline-offset:2px;
-}
-
-#mpMenu .mpCodeInput{
-  width:92%;
-  height:28px;
-  margin:6px 0 3px;
-  padding:5px 8px;
-  border:2px solid #5c6374;
-  outline:0;
-  background:#0d0f16;
-  color:#fff;
-  text-align:center;
-  text-transform:uppercase;
-  letter-spacing:3px;
-  font:9px "NeonPixel","Courier New",monospace;
-  box-shadow:3px 3px 0 #05060a;
-  caret-color:#ffd34d;
-}
-
-#mpMenu .mpCodeInput:focus{
-  border-color:#ffd34d;
-}
-
-#mpMenu .mpCodeInput::placeholder{
-  color:#73798a;
-  letter-spacing:1px;
-}
-
-#mpMenu .mpJoinConfirm{
-  margin-top:3px;
-}
-
-#mpMenu .mpBackImg{
-  margin-top:7px;
-}
-
-#mpMenu .authError,
-#mpLobbyRoom .authError{
-  position:relative;
-  z-index:2;
-  min-height:8px;
-  margin:3px 0 0;
-  font-size:6px;
-  line-height:9px;
-  text-shadow:2px 2px #000;
-}
-
-#mpLobbyRoom .mpRoomCode{
-  color:#ffd34d;
-  text-shadow:2px 2px #000;
-}
-
-#mpLobbyRoom .mpSlots{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  margin:0 0 7px;
-}
-
-#mpLobbyRoom .mpSlot{
-  position:relative;
-  min-height:24px;
-  padding:6px 8px 5px;
-  border:2px solid #4c5261;
-  background:#101219;
-  color:#f4f5fa;
-  font:7px "NeonPixel","Courier New",monospace;
-  line-height:12px;
-  text-align:left;
-  box-shadow:3px 3px 0 #05060a;
-  text-shadow:2px 2px #000;
-}
-
-#mpLobbyRoom .mpSlot.empty{
-  color:#686e7c;
-  font-style:normal;
-}
-
-#mpLobbyRoom .mpSlot.host{
-  color:#62b9ff;
-  border-color:#3f8ac2;
-}
-
-#mpLobbyRoom .mpSlot.host::after{
-  content:"HOST";
-  position:absolute;
-  right:7px;
-  top:5px;
-  color:#ffd34d;
-  font:6px "NeonPixel","Courier New",monospace;
-}
-
-#mpLobbyRoom .mpStartImg{
-  margin-top:2px;
-  margin-bottom:1px;
-}
-
-#mpLobbyRoom .mpWaitNote{
-  position:relative;
-  z-index:1;
-  margin:5px 0 2px;
-  color:#8e95a6;
-  font-size:6px;
-}
-
-#mpLobbyRoom .mpBackImg{
-  margin-top:2px;
-}
-
-/* Keep the reference composition balanced on narrower landscape screens. */
-@media (max-width:700px){
-  #mpMenu .mpBox,
-  #mpLobbyRoom .mpBox{
-    width:min(70vw,235px);
-    padding:14px 12px 12px;
-  }
-
-  #mpMenu .mpTitle,
-  #mpLobbyRoom .mpTitle{
-    font-size:14px;
-    margin-bottom:10px;
-  }
-
-  #mpLobbyRoom .mpSlot{
-    font-size:6px;
-    min-height:22px;
-    padding:5px 7px 4px;
-  }
-}
 
 
 /* ===================== INVENTORY VISUAL UPGRADE V2 =====================
@@ -1507,7 +1270,7 @@ img,canvas{image-rendering:pixelated}
 }
 .shopName{
   width:100%;text-align:center;color:#fff;font-size:8px;padding-top:9px;
-  text-shadow:2px 2px #000;white-space:nowrap;
+  text-shadow:2px 2px #000;white-space:normal;line-height:1.05;min-height:17px;
 }
 .shopWeaponImg{
   width:68%;height:auto;max-height:50px;object-fit:contain;
@@ -3440,9 +3203,6 @@ canvas{animation:none!important}
       <button id="play" class="lobbyBtn" aria-label="Play">
         <img src="image/playbutton.png" alt="PLAY">
       </button>
-      <button id="multiplayerBtnLobby" class="lobbyBtn" aria-label="Multiplayer">
-        <img src="image/multiplayerbutton.png" alt="MULTIPLAYER">
-      </button>
       <button id="inventory" class="lobbyBtn" aria-label="Inventory">
         <img src="image/inventorybutton.png" alt="INVENTORY">
       </button>
@@ -3612,6 +3372,11 @@ canvas{animation:none!important}
         <img class="invWeapon" src="image/M4a1.png" alt="M4A1">
         <button class="invEquip" disabled>TERKUNCI</button>
       </div>
+      <div class="invCard locked" data-weapon="ar15">
+        <div class="invName">AR15</div>
+        <img class="invWeapon" src="image/AR15.png" alt="AR15">
+        <button class="invEquip" disabled>TERKUNCI</button>
+      </div>
       <div class="invCard locked" data-weapon="mp5">
         <div class="invName">MP5</div>
         <img class="invWeapon" src="image/Mp5.png" alt="MP5">
@@ -3627,9 +3392,9 @@ canvas{animation:none!important}
         <img class="invWeapon" src="image/Scar.png" alt="Scar">
         <button class="invEquip" disabled>TERKUNCI</button>
       </div>
-      <div class="invCard locked" data-weapon="ar15">
-        <div class="invName">AR15</div>
-        <img class="invWeapon" src="image/AR15.png" alt="AR15">
+      <div class="invCard locked" data-weapon="mossberg500">
+        <div class="invName">MOSSBERG<br>500</div>
+        <img class="invWeapon" src="image/Mossberg500.png" alt="Mossberg 500">
         <button class="invEquip" disabled>TERKUNCI</button>
       </div>
     </div>
@@ -3670,96 +3435,20 @@ canvas{animation:none!important}
       <button class="shopTab" type="button" data-shoptab="skins"><span class="ico">✦</span>SKIN</button>
     </div>
     <div class="shopGrid" data-shoppanel="weapons">
-      <div class="shopCard owned" data-weapon="glock17">
-        <span class="shopOwnedDot" aria-hidden="true"></span>
-        <div class="shopName">GLOCK 17</div>
-        <img class="shopWeaponImg" src="image/Glock17.png" alt="Glock 17">
-        <div class="shopPriceRow"><span class="priceOwnedLabel">DIMILIKI</span></div>
-        <button class="shopBuyBtn owned" type="button" disabled>DIMILIKI</button>
-      </div>
-      <div class="shopCard" data-weapon="desertEagle">
-        <span class="shopOwnedDot" aria-hidden="true" style="display:none"></span>
-        <div class="shopName">DESERT EAGLE</div>
-        <img class="shopWeaponImg" src="image/DesertEagle.png" alt="Desert Eagle">
-        <div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>50</span></div>
-        <button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">50</button>
-      </div>
-      <div class="shopCard" data-weapon="m4a1">
-        <span class="shopOwnedDot" aria-hidden="true" style="display:none"></span>
-        <div class="shopName">M4A1</div>
-        <img class="shopWeaponImg" src="image/M4a1.png" alt="M4A1">
-        <div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>100</span></div>
-        <button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">100</button>
-      </div>
-      <div class="shopCard" data-weapon="mp5">
-        <span class="shopOwnedDot" aria-hidden="true" style="display:none"></span>
-        <div class="shopName">MP5</div>
-        <img class="shopWeaponImg" src="image/Mp5.png" alt="MP5">
-        <div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>150</span></div>
-        <button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">150</button>
-      </div>
-      <div class="shopCard" data-weapon="ak47">
-        <span class="shopOwnedDot" aria-hidden="true" style="display:none"></span>
-        <div class="shopName">AK-47</div>
-        <img class="shopWeaponImg" src="image/Ak47.png" alt="AK-47">
-        <div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>200</span></div>
-        <button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">200</button>
-      </div>
-      <div class="shopCard" data-weapon="scar">
-        <span class="shopOwnedDot" aria-hidden="true" style="display:none"></span>
-        <div class="shopName">SCAR</div>
-        <img class="shopWeaponImg" src="image/Scar.png" alt="Scar">
-        <div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>350</span></div>
-        <button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">350</button>
-      </div>
-      <div class="shopCard" data-weapon="ar15">
-        <span class="shopOwnedDot" aria-hidden="true" style="display:none"></span>
-        <div class="shopName">AR15</div>
-        <img class="shopWeaponImg" src="image/AR15.png" alt="AR15">
-        <div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>400</span></div>
-        <button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">400</button>
-      </div>
-    </div>
+      <div class="shopCard owned" data-weapon="glock17"><span class="shopOwnedDot" aria-hidden="true"></span><div class="shopName">GLOCK 17</div><img class="shopWeaponImg" src="image/Glock17.png" alt="Glock 17"><div class="shopPriceRow"><span class="priceOwnedLabel">DIMILIKI</span></div><button class="shopBuyBtn owned" type="button" disabled>DIMILIKI</button></div>
+      <div class="shopCard" data-weapon="desertEagle"><span class="shopOwnedDot" aria-hidden="true" style="display:none"></span><div class="shopName">DESERT<br>EAGLE</div><img class="shopWeaponImg" src="image/DesertEagle.png" alt="Desert Eagle"><div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>50</span></div><button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">50</button></div>
+      <div class="shopCard" data-weapon="m4a1"><span class="shopOwnedDot" aria-hidden="true" style="display:none"></span><div class="shopName">M4A1</div><img class="shopWeaponImg" src="image/M4a1.png" alt="M4A1"><div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>100</span></div><button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">100</button></div>
+      <div class="shopCard" data-weapon="ar15"><span class="shopOwnedDot" aria-hidden="true" style="display:none"></span><div class="shopName">AR15</div><img class="shopWeaponImg" src="image/AR15.png" alt="AR15"><div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>120</span></div><button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">120</button></div>
+      <div class="shopCard" data-weapon="mp5"><span class="shopOwnedDot" aria-hidden="true" style="display:none"></span><div class="shopName">MP5</div><img class="shopWeaponImg" src="image/Mp5.png" alt="MP5"><div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>150</span></div><button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">150</button></div>
+      <div class="shopCard" data-weapon="ak47"><span class="shopOwnedDot" aria-hidden="true" style="display:none"></span><div class="shopName">AK-47</div><img class="shopWeaponImg" src="image/Ak47.png" alt="AK-47"><div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>200</span></div><button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">200</button></div>
+      <div class="shopCard" data-weapon="scar"><span class="shopOwnedDot" aria-hidden="true" style="display:none"></span><div class="shopName">SCAR</div><img class="shopWeaponImg" src="image/Scar.png" alt="Scar"><div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>350</span></div><button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">350</button></div>
+      <div class="shopCard" data-weapon="mossberg500"><span class="shopOwnedDot" aria-hidden="true" style="display:none"></span><div class="shopName">MOSSBERG<br>500</div><img class="shopWeaponImg" src="image/Mossberg500.png" alt="Mossberg 500"><div class="shopPriceRow"><img class="shopPriceIcon" src="image/money.png" alt=""><span>350</span></div><button class="shopBuyBtn" type="button">BELI &middot; <img class="btnCoin" src="image/money.png" alt="">350</button></div>
+
     <div class="shopGrid" data-shoppanel="skins" style="display:none">
 </div>
     <div class="shopFooter">SKIN BARU AKAN MENYUSUL &nbsp;•&nbsp; CARI MONEY DENGAN BERMAIN</div>
   </div>
-</div>
-
-<div id="mpMenu" class="mpOverlay">
-  <div class="mpBox mpMainBox">
-    <div class="mpTitle">MULTIPLAYER</div>
-
-    <div class="mpImageButtons">
-      <button type="button" id="mpCreateBtn" class="mpImgBtn" aria-label="Create Lobby">
-        <img src="image/createlobbybutton.png" alt="CREATE LOBBY">
-      </button>
-
-      <button type="button" id="mpJoinBtn" class="mpImgBtn" aria-label="Join Lobby">
-        <img src="image/joinlobbybutton.png" alt="JOIN LOBBY">
-      </button>
-
-      <input id="mpJoinCode" class="mpCodeInput" style="display:none" type="text"
-             placeholder="KODE LOBBY" maxlength="5" autocomplete="off" spellcheck="false">
-
-      <button type="button" id="mpJoinConfirm" class="mpImgBtn mpJoinConfirm" style="display:none" aria-label="Join Lobby">
-        <img src="image/joinlobbybutton.png" alt="JOIN LOBBY">
-      </button>
-
-      <div id="mpMenuError" class="authError"></div>
-
-      <button type="button" id="mpMenuBack" class="mpImgBtn mpBackImg" aria-label="Kembali">
-        <img src="image/backbutton.png" alt="KEMBALI">
-      </button>
-    </div>
-  </div>
-</div>
-
-<div id="mpLobbyRoom" class="mpOverlay">
-  <div class="mpBox mpRoomBox">
-    <div class="mpTitle">LOBBY <span id="mpRoomCode" class="mpRoomCode">-----</span></div>
-
-    <div id="mpSlots" class="mpSlots"></div>
+</div><div id="mpSlots" class="mpSlots"></div>
 
     <div id="mpRoomPlayerRequirement">MINIMAL 2 PLAYER UNTUK MULAI</div>
     <button type="button" id="mpStartBtn" class="mpImgBtn mpStartImg mpLocked" style="display:none" aria-label="Mulai Game" disabled>
@@ -3935,164 +3624,6 @@ function genCode(){
   let s="";for(let i=0;i<5;i++)s+=chars[Math.floor(Math.random()*chars.length)];
   return s;
 }
-function requireLogin(){
-  if(!myUid){
-    document.getElementById("authScreen").classList.remove("hidden");
-    return false;
-  }
-  return true;
-}
-function showOverlay(id){
-  document.querySelectorAll(".mpOverlay").forEach(el=>el.classList.remove("show"));
-  document.getElementById(id).classList.add("show");
-}
-function hideMpOverlays(){
-  document.querySelectorAll(".mpOverlay").forEach(el=>el.classList.remove("show"));
-}
-
-document.getElementById("multiplayerBtnLobby").addEventListener("click",()=>{
-  if(!requireLogin())return;
-  document.getElementById("mpMenuError").textContent="";
-  document.getElementById("mpJoinCode").style.display="none";
-  document.getElementById("mpJoinConfirm").style.display="none";
-  showOverlay("mpMenu");
-});
-document.getElementById("mpMenuBack").addEventListener("click",()=>{hideMpOverlays()});
-
-document.getElementById("mpJoinBtn").addEventListener("click",()=>{
-  document.getElementById("mpJoinCode").style.display="block";
-  document.getElementById("mpJoinConfirm").style.display="block";
-  document.getElementById("mpJoinCode").focus();
-});
-
-document.getElementById("mpCreateBtn").addEventListener("click",async()=>{
-  const errEl=document.getElementById("mpMenuError");errEl.textContent="";
-  try{
-    const code=genCode();
-    lobbyCode=code;isHost=true;
-    const lobbyRef=db.ref("lobbies/"+code);
-    await lobbyRef.set({
-      host:myUid,hostName:myName,status:"waiting",createdAt:Date.now(),
-      players:{[myUid]:{name:myName,weapon:currentWeapon,skin:equippedSkins[currentWeapon]||null,joinedAt:Date.now()}}
-    });
-    // Host disconnect: clear host + remove host player atomically so a guest
-    // never promotes the disappearing host during the tiny race between writes.
-    db.ref().onDisconnect().update({
-      ["lobbies/"+code+"/host"]:null,
-      ["lobbies/"+code+"/players/"+myUid]:null
-    });
-    attachLobbyListeners(code);
-    document.getElementById("mpRoomCode").textContent=code;
-    hideMpOverlays();showOverlay("mpLobbyRoom");
-  }catch(e){errEl.textContent="Gagal membuat lobby: "+e.message}
-});
-
-document.getElementById("mpJoinConfirm").addEventListener("click",async()=>{
-  const errEl=document.getElementById("mpMenuError");errEl.textContent="";
-  const code=document.getElementById("mpJoinCode").value.trim().toUpperCase();
-  if(!code){errEl.textContent="Masukkan kode lobby.";return}
-  try{
-    const snap=await db.ref("lobbies/"+code).get();
-    if(!snap.exists()){errEl.textContent="Lobby tidak ditemukan.";return}
-    const data=snap.val();
-    if(data.status!=="waiting"){errEl.textContent="Game sudah dimulai / lobby ditutup.";return}
-    const count=data.players?Object.keys(data.players).length:0;
-    if(count>=4){errEl.textContent="Lobby penuh (maks 4 pemain).";return}
-    lobbyCode=code;isHost=false;
-    const lobbyRef=db.ref("lobbies/"+code);
-    await lobbyRef.child("players/"+myUid).set({name:myName,weapon:currentWeapon,skin:equippedSkins[currentWeapon]||null,joinedAt:Date.now()});
-    lobbyRef.child("players/"+myUid).onDisconnect().remove();
-    attachLobbyListeners(code);
-    document.getElementById("mpRoomCode").textContent=code;
-    hideMpOverlays();showOverlay("mpLobbyRoom");
-  }catch(e){errEl.textContent="Gagal join: "+e.message}
-});
-
-let lobbyHostUidVar=null;
-async function attachLobbyListeners(code){
-  detachLobbyListeners();
-  const lobbyRef=db.ref("lobbies/"+code);
-  try{const hostSnap=await lobbyRef.child("host").get();lobbyHostUidVar=hostSnap.val();}catch(e){lobbyHostUidVar=isHost?myUid:null}
-  lobbyPlayersListenerRef=lobbyRef.child("players");
-  lobbyPlayersListenerRef.on("value",snap=>{
-    const players=snap.val()||{};
-    renderSlots(players);
-    const playerCount=Object.keys(players).length;
-    const startBtn=document.getElementById("mpStartBtn");
-    const req=document.getElementById("mpRoomPlayerRequirement");
-    const canStart=isHost && playerCount>=2 && playerCount<=4;
-    startBtn.style.display=isHost?"block":"none";
-    startBtn.disabled=!canStart;
-    startBtn.classList.toggle("mpLocked",!canStart);
-    if(req){
-      req.textContent=playerCount<2
-        ?"MINIMAL 2 PLAYER UNTUK MULAI"
-        :"PLAYER "+playerCount+"/4 - SIAP DIMULAI";
-      req.style.color=playerCount>=2?"#7dffa8":"#ffd34d";
-    }
-    document.getElementById("mpWaitNote").style.display=isHost?"none":"block";
-  });
-  lobbyStatusListenerRef=lobbyRef.child("status");
-  lobbyStatusListenerRef.on("value",snap=>{
-    const status=snap.val();
-    if(status==="playing"&&!mpMode){
-      startMultiplayerGame();
-    }
-    if((status==="closed"||status===null)&&mpMode===false){
-      // Host left before starting.
-      if(!isHost){
-        document.getElementById("mpRoomError").textContent="Host meninggalkan lobby.";
-        setTimeout(leaveLobby,1200);
-      }
-    }
-  });
-}
-function detachLobbyListeners(){
-  if(lobbyPlayersListenerRef)lobbyPlayersListenerRef.off();
-  if(lobbyStatusListenerRef)lobbyStatusListenerRef.off();
-  lobbyPlayersListenerRef=null;lobbyStatusListenerRef=null;
-}
-function renderSlots(players){
-  const wrap=document.getElementById("mpSlots");
-  wrap.innerHTML="";
-  const uids=Object.keys(players);
-  for(let i=0;i<4;i++){
-    const div=document.createElement("div");
-    if(uids[i]){
-      const uid=uids[i],pdata=players[uid];
-      div.className="mpSlot"+(uid===lobbyHostUidVar?" host":"");
-      div.textContent=(i+1)+". "+pdata.name+(uid===lobbyHostUidVar?" (HOST)":"");
-    }else{
-      div.className="mpSlot empty";
-      div.textContent=(i+1)+". Kosong";
-    }
-    wrap.appendChild(div);
-  }
-}
-
-document.getElementById("mpLeaveBtn").addEventListener("click",leaveLobby);
-async function leaveLobby(){
-  if(lobbyCode&&myUid){
-    try{await db.ref("lobbies/"+lobbyCode+"/players/"+myUid).remove();}catch(e){}
-    if(isHost){try{await db.ref("lobbies/"+lobbyCode).remove();}catch(e){}}
-  }
-  detachLobbyListeners();
-  lobbyCode=null;isHost=false;
-  document.getElementById("mpRoomError").textContent="";
-  hideMpOverlays();
-}
-
-document.getElementById("mpStartBtn").addEventListener("click",async()=>{
-  if(!isHost||!lobbyCode)return;
-  const snap=await db.ref("lobbies/"+lobbyCode+"/players").get();
-  const count=snap.exists() ? Object.keys(snap.val()||{}).length : 0;
-  if(count<2 || count>4){
-    const err=document.getElementById("mpRoomError");
-    if(err)err.textContent="GAME TIDAK BISA DIMULAI. MINIMAL 2 PLAYER.";
-    return;
-  }
-  await db.ref("lobbies/"+lobbyCode+"/status").set("playing");
-});
 </script>
 
 <script>
@@ -4109,20 +3640,21 @@ const spiderFrames=["Spider1.png","Spider2.png","Spider3.png","Spider4.png"].map
 const impFrames=["ImpFly1.png","ImpFly2.png","ImpFly3.png","ImpFly5.png","ImpFly6.png"].map(img);
 const bullet=img("Bullet.png");
 const gunGlock=img("Glock17.png"),gunA1=img("Glock17A1.png"),gunA2=img("Glock17A2.png"),gunAk47=img("Ak47.png");
-const gunDesertEagle=img("DesertEagle.png"),gunM4a1=img("M4a1.png"),gunMp5=img("Mp5.png"),gunScar=img("Scar.png"),gunAR15=img("AR15.png");
+const gunDesertEagle=img("DesertEagle.png"),gunM4a1=img("M4a1.png"),gunMp5=img("Mp5.png"),gunScar=img("Scar.png"),gunAR15=img("AR15.png"),gunMossberg500=img("Mossberg500.png");
 let currentWeapon="glock17";
 const weaponStats={
   glock17:{damage:25,fireInterval:.32},
   desertEagle:{damage:40,fireInterval:.32},
   m4a1:{damage:32,fireInterval:.22},
+  ar15:{damage:50,fireInterval:.34},
   mp5:{damage:32,fireInterval:.15},
   ak47:{damage:40,fireInterval:.22},
   scar:{damage:50,fireInterval:.15},
-  ar15:{damage:50,fireInterval:.34}
+  mossberg500:{damage:100,fireInterval:2.5}
 };
-const weaponPrices={glock17:0,desertEagle:50,m4a1:100,mp5:150,ak47:200,scar:350,ar15:120};
+const weaponPrices={glock17:0,desertEagle:50,m4a1:100,ar15:120,mp5:150,ak47:200,scar:350,mossberg500:350};
 let ownedWeapons=new Set(["glock17"]);
-const VALID_WEAPONS=["glock17","desertEagle","m4a1","mp5","ak47","scar","ar15"];
+const VALID_WEAPONS=["glock17","desertEagle","m4a1","ar15","mp5","ak47","scar","mossberg500"];
 function ownedKey(uid=myUid){return "wdOwnedWeapons:"+String(uid||"guest")}
 function weaponKey(uid=myUid){return "wdWeapon:"+String(uid||"guest")}
 function isOwned(id){return id==="glock17"||ownedWeapons.has(id)}
@@ -4322,6 +3854,7 @@ function activeGunImage(){
     case "ak47":return gunAk47;
     case "scar":return gunScar;
     case "ar15":return gunAR15;
+    case "mossberg500":return gunMossberg500;
     default:return gunGlock;
   }
 }
@@ -4566,6 +4099,7 @@ function applySettings(){
   if(weaponAudio.mp5)weaponAudio.mp5.volume=settingsState.volume/100;
   if(weaponAudio.ak47)weaponAudio.ak47.volume=settingsState.volume/100;
   if(weaponAudio.scar)weaponAudio.scar.volume=settingsState.volume/100;
+  if(weaponAudio.mossberg500)weaponAudio.mossberg500.volume=settingsState.volume/100;
   document.querySelectorAll(".controlChoice").forEach(b=>b.classList.toggle("active",b.dataset.control===settingsState.control));
 }
 async function saveMoney(){
@@ -4590,7 +4124,7 @@ async function loadMoney(){
 }
 function rewardWaveMoney(completedWave){if(!myUid||moneyLoadedForUid!==myUid)return;money+=1;profileSession.moneyEarned++;updateMoneyUI();playMoneyRewardAnim();saveMoney()}
 loadLocalSettings();
-const weaponAudio={glock17:null,desertEagle:null,m4a1:null,mp5:null,ak47:null,scar:null};
+const weaponAudio={glock17:null,desertEagle:null,m4a1:null,mp5:null,ak47:null,scar:null,mossberg500:null};
 function initAudio(){
   if(!weaponAudio.glock17){
     weaponAudio.glock17=new Audio(A+"Glock17.wav");
@@ -4611,6 +4145,10 @@ function initAudio(){
   if(!weaponAudio.ak47){
     weaponAudio.ak47=new Audio(A+"Ak47.wav");
     weaponAudio.ak47.preload="auto";
+  }
+  if(!weaponAudio.mossberg500){
+    weaponAudio.mossberg500=new Audio(A+"Mossberg500.wav");
+    weaponAudio.mossberg500.preload="auto";
   }
   if(!weaponAudio.scar){
     weaponAudio.scar=new Audio(A+"Scar.Wav");
@@ -4760,7 +4298,10 @@ function fire(){
   // Smooth weapon recoil: kick backward, then spring forward to its resting position.
   gunRecoil=Math.min(6,gunRecoil+4.5);
   gunRecoilVel+=42;
-  gunSound();shake=isGoldenDesertEagleActive() ? .18 : (isGoldenAk47Active() ? .075 : .075);
+  gunSound();
+  // Mossberg 500: heavy shotgun blast = 2x normal screen shake.
+  shake = currentWeapon==="mossberg500" ? .30 :
+          (isGoldenDesertEagleActive() ? .18 : (isGoldenAk47Active() ? .075 : .075));
 }
 function particle(x,y){
   for(let i=0;i<2;i++){const a=Math.random()*6.283,s=15+Math.random()*35;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:.25})}
@@ -4961,7 +4502,7 @@ function sprite(im,x,y,w,h,a=0,mirrorX=false){
 function gunImageForWeapon(id){
   const sid=equippedSkins&&equippedSkins[id];
   if(id==="glock17"&&sid==="celestialGlock17"&&isSkinOwned("celestialGlock17"))return gunCelestialGlock;
-  switch(id){case "desertEagle":return gunDesertEagle;case "m4a1":return gunM4a1;case "mp5":return gunMp5;case "ak47":return gunAk47;case "scar":return gunScar;case "ar15":return gunAR15;default:return gunGlock;}
+  switch(id){case "desertEagle":return gunDesertEagle;case "m4a1":return gunM4a1;case "mp5":return gunMp5;case "ak47":return gunAk47;case "scar":return gunScar;case "ar15":return gunAR15;case "mossberg500":return gunMossberg500;default:return gunGlock;}
 }
 function gunFrameForWeapon(id,t){
   if(id==="glock17"&&equippedSkins&&equippedSkins.glock17==="celestialGlock17"&&isSkinOwned("celestialGlock17")){
@@ -5027,16 +4568,30 @@ function drawGun(){
     ctx.rotate(a);
     ctx.globalAlpha=alpha;
     const celestial=currentWeapon==="glock17"&&equippedSkins&&equippedSkins.glock17==="celestialGlock17"&&isSkinOwned("celestialGlock17");
-    ctx.fillStyle=celestial?"#f5e8ff":"#fff4b0";
-    ctx.fillRect(-2,-2,7,4);
-    ctx.fillStyle=celestial?"#b86cff":"#ffd34d";
-    ctx.fillRect(2,-4,5,2);
-    ctx.fillRect(2,2,5,2);
-    ctx.fillRect(7,-1,3,2);
-    if(celestial){
-      ctx.fillStyle="#7a35ff";
-      ctx.fillRect(9,-3,4,2);
-      ctx.fillRect(9,1,4,2);
+    const mossberg=currentWeapon==="mossberg500";
+    if(mossberg){
+      // Large bright shotgun muzzle flash.
+      ctx.fillStyle="#fffbe0";
+      ctx.fillRect(-6,-4,20,8);
+      ctx.fillStyle="#fff1a0";
+      ctx.fillRect(5,-10,18,5);
+      ctx.fillRect(5,5,18,5);
+      ctx.fillStyle="#ffd34d";
+      ctx.fillRect(14,-4,16,8);
+      ctx.fillRect(22,-11,9,4);
+      ctx.fillRect(22,7,9,4);
+    }else{
+      ctx.fillStyle=celestial?"#f5e8ff":"#fff4b0";
+      ctx.fillRect(-2,-2,7,4);
+      ctx.fillStyle=celestial?"#b86cff":"#ffd34d";
+      ctx.fillRect(2,-4,5,2);
+      ctx.fillRect(2,2,5,2);
+      ctx.fillRect(7,-1,3,2);
+      if(celestial){
+        ctx.fillStyle="#7a35ff";
+        ctx.fillRect(9,-3,4,2);
+        ctx.fillRect(9,1,4,2);
+      }
     }
     ctx.restore();
     ctx.globalAlpha=1;
@@ -5045,7 +4600,7 @@ function drawGun(){
 function draw(){
   ctx.clearRect(0,0,W,H);
   let sx=0,sy=0;
-  if(shake>0){sx=(Math.random()-.5)*2;sy=(Math.random()-.5)*2}
+  if(shake>0){const amp=shake>=.25?8:3;sx=(Math.random()-.5)*amp;sy=(Math.random()-.5)*amp}
   ctx.save();ctx.translate(sx,sy);
 
   ctx.drawImage(roomImg,0,0,W,H);
@@ -5109,7 +4664,8 @@ function mpFire(pl){
   const a=pl.angle+(Math.random()-.5)*accuracy,sp=205;
   bullets.push({x:pl.x+Math.cos(a)*12,y:pl.y+Math.sin(a)*12,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,damage:stats.damage,weapon:wid,skin:pl.skin||null,owner:pl.uid});
   pl.muzzleFlash=.065;pl.gunAnim=0;pl.gunRecoil=Math.min(6,pl.gunRecoil+4.5);pl.gunRecoilVel+=42;
-  gunSoundForWeapon(wid);shake=.075;
+  gunSoundForWeapon(wid);
+  shake = wid==="mossberg500" ? .30 : .075;
 }
 function mpApplyInput(pl,inp,dt){
   if(!pl)return;
@@ -5576,7 +5132,7 @@ function lerpAngle(a,b,t){
 function mpDraw(){
   ctx.clearRect(0,0,W,H);
   let sx=0,sy=0;
-  if(isHost&&shake>0){sx=(Math.random()-.5)*2;sy=(Math.random()-.5)*2}
+  if(isHost&&shake>0){const amp=shake>=.25?8:3;sx=(Math.random()-.5)*amp;sy=(Math.random()-.5)*amp}
   ctx.save();ctx.translate(sx,sy);
   ctx.drawImage(roomImg,0,0,W,H);
 
@@ -5659,6 +5215,28 @@ function mpDraw(){
                    (pl.skin==="goldenDesertEagle"&&gunId==="desertEagle")?gunGoldenDesertEagle:
                    (pl.skin==="goldenAk47"&&gunId==="ak47")?gunGoldenAk47:gunFrameForWeapon(gunId,pl.gunAnim==null?999:pl.gunAnim);
     if(gunImg&&gunImg.complete)ctx.drawImage(gunFrame,-16,-9,32,18);
+
+    // Per-player muzzle flash. Mossberg 500 gets a much larger flash.
+    if((pl.muzzleFlash||0)>0){
+      const mf=pl.muzzleFlash/.065;
+      const ca=Math.cos(a),sa=Math.sin(a);
+      const fx=Math.round(pl.x+ca*(24-(pl.gunRecoil||0)));
+      const fy=Math.round(pl.y+sa*(24-(pl.gunRecoil||0)));
+      ctx.save();
+      ctx.translate(fx,fy);
+      ctx.rotate(a);
+      ctx.globalAlpha=Math.max(0,Math.min(1,mf));
+      if(gunId==="mossberg500"){
+        ctx.fillStyle="#fffbe0";ctx.fillRect(-7,-5,24,10);
+        ctx.fillStyle="#fff1a0";ctx.fillRect(6,-12,22,6);ctx.fillRect(6,6,22,6);
+        ctx.fillStyle="#ffd34d";ctx.fillRect(14,-5,19,10);
+        ctx.fillRect(24,-13,10,5);ctx.fillRect(24,8,10,5);
+      }else{
+        ctx.fillStyle="#fff4b0";ctx.fillRect(-3,-3,9,6);
+        ctx.fillStyle="#ffd34d";ctx.fillRect(3,-5,7,3);ctx.fillRect(3,3,7,3);
+      }
+      ctx.restore();
+    }
     ctx.restore();
     ctx.globalAlpha=1;
     ctx.fillStyle=pl.uid===myUid?"#7fd1ff":"#fff";
@@ -5818,7 +5396,7 @@ document.getElementById("play").addEventListener("click",async()=>{
   spawn=Math.min(spawn,.2);
 });
 
-const PRELOAD_ASSETS=["assets/PixelNeon.ttf", "assets/Transparent Button With White Blue Border_Idle.png", "assets/Transparent Button With White Blue Border_Pressed.png", "assets/Line light joystick border.png", "assets/Line light joystick thumb.png", "image/background.png", "image/title.png", "image/playbutton.png", "image/multiplayerbutton.png", "image/inventorybutton.png", "image/shopbutton.png", "image/event.png", "image/money.png", "image/coin.png", "image/Glock17.png", "image/DesertEagle.png", "image/M4a1.png", "image/Mp5.png", "image/Ak47.png", "image/Scar.png", "image/GoldenDesertEagle.png", "image/GoldenAk47.png", "image/CGlock17.gif", "image/CGlock17A1.png", "image/CGlock17A2.png", "image/CGlock17A3.png", "image/CGlock17A4.png", "image/createlobbybutton.png", "image/joinlobbybutton.png", "image/backbutton.png", "image/playgamebutton.png", "image/exitlobbybutton.png", "assets/click.wav", "assets/TheRoom2.png", "assets/Vingette.png", "assets/Player1.png", "assets/Player2.png", "assets/Player22.png", "assets/Player3.png", "assets/Player4.png", "assets/Ghost1.png", "assets/Ghost2.png", "assets/Ghost3.png", "assets/Ghost4.png", "assets/Spider1.png", "assets/Spider2.png", "assets/Spider3.png", "assets/Spider4.png", "assets/ImpFly1.png", "assets/ImpFly2.png", "assets/ImpFly3.png", "assets/ImpFly5.png", "assets/ImpFly6.png", "assets/Bullet.png", "assets/Glock17.png", "assets/Glock17A1.png", "assets/Glock17A2.png", "assets/Ak47.png", "assets/DesertEagle.png", "assets/M4a1.png", "assets/Mp5.png", "assets/Scar.png", "assets/GoldenDesertEagle.png", "assets/GoldenAk47.png", "assets/CGlock17.gif", "assets/CGlock17A1.png", "assets/CGlock17A2.png", "assets/CGlock17A3.png", "assets/CGlock17A4.png", "assets/EnemyBullet1.png", "assets/EnemyBullet2.png", "assets/Glock17.wav", "assets/DesertEagle.Wav", "assets/M4a1.Wav", "assets/Mp5.wav", "assets/Ak47.wav", "assets/Scar.Wav"];
+const PRELOAD_ASSETS=["assets/PixelNeon.ttf", "assets/Transparent Button With White Blue Border_Idle.png", "assets/Transparent Button With White Blue Border_Pressed.png", "assets/Line light joystick border.png", "assets/Line light joystick thumb.png", "image/background.png", "image/title.png", "image/playbutton.png", "", "image/inventorybutton.png", "image/shopbutton.png", "image/event.png", "image/money.png", "image/coin.png", "image/Glock17.png", "image/DesertEagle.png", "image/M4a1.png", "image/Mp5.png", "image/Ak47.png", "image/Scar.png", "image/Mossberg500.png", "image/GoldenDesertEagle.png", "image/GoldenAk47.png", "image/CGlock17.gif", "image/CGlock17A1.png", "image/CGlock17A2.png", "image/CGlock17A3.png", "image/CGlock17A4.png", "image/createlobbybutton.png", "image/joinlobbybutton.png", "image/backbutton.png", "image/playgamebutton.png", "image/exitlobbybutton.png", "assets/click.wav", "assets/TheRoom2.png", "assets/Vingette.png", "assets/Player1.png", "assets/Player2.png", "assets/Player22.png", "assets/Player3.png", "assets/Player4.png", "assets/Ghost1.png", "assets/Ghost2.png", "assets/Ghost3.png", "assets/Ghost4.png", "assets/Spider1.png", "assets/Spider2.png", "assets/Spider3.png", "assets/Spider4.png", "assets/ImpFly1.png", "assets/ImpFly2.png", "assets/ImpFly3.png", "assets/ImpFly5.png", "assets/ImpFly6.png", "assets/Bullet.png", "assets/Glock17.png", "assets/Glock17A1.png", "assets/Glock17A2.png", "assets/Ak47.png", "assets/DesertEagle.png", "assets/M4a1.png", "assets/Mp5.png", "assets/Scar.png", "assets/GoldenDesertEagle.png", "assets/GoldenAk47.png", "assets/CGlock17.gif", "assets/CGlock17A1.png", "assets/CGlock17A2.png", "assets/CGlock17A3.png", "assets/CGlock17A4.png", "assets/EnemyBullet1.png", "assets/EnemyBullet2.png", "assets/Glock17.wav", "assets/DesertEagle.Wav", "assets/M4a1.Wav", "assets/Mp5.wav", "assets/Ak47.wav", "assets/Scar.Wav", "assets/Mossberg500.wav"];
 let assetLoadingPromise=null;
 function showAssetLoader(){const el=document.getElementById("assetLoader");el.classList.add("show");el.setAttribute("aria-hidden","false");document.getElementById("loaderFill").style.width="0%";document.getElementById("loaderPct").textContent="0%";}
 function hideAssetLoader(){const el=document.getElementById("assetLoader");el.classList.remove("show");el.setAttribute("aria-hidden","true");}
@@ -6871,8 +6449,9 @@ document.addEventListener("DOMContentLoaded",()=>{
     pl.gunRecoil=Math.min(6,pl.gunRecoil+4.5);
     pl.gunRecoilVel+=42;
     gunSoundForWeapon(wid);
-    // GDE gets stronger shake.
-    shake = (pl.skin==="goldenDesertEagle" && wid==="desertEagle") ? .16 : .075;
+    // Mossberg 500 has a heavy shotgun blast with 2x screen shake.
+    shake = (wid==="mossberg500") ? .15 :
+            ((pl.skin==="goldenDesertEagle" && wid==="desertEagle") ? .16 : .075);
   };
 
   const oldMpApplyInput = mpApplyInput;
@@ -7671,6 +7250,7 @@ document.addEventListener("DOMContentLoaded",()=>{
      ak47:"Ak47.png",
      scar:"Scar.png",
      ar15:"AR15.png",
+     mossberg500:"Mossberg500.png",
      goldenDesertEagle:"GoldenDesertEagle.png",
      goldenAk47:"GoldenAk47.png"
    };
@@ -7700,7 +7280,7 @@ document.addEventListener("DOMContentLoaded",()=>{
    nm.className="gelPlayerName";
    nm.textContent=String(p.name||"PLAYER").toUpperCase();
 
-   const weaponNames={glock17:"GLOCK 17",desertEagle:"DESERT EAGLE",m4a1:"M4A1",mp5:"MP5",ak47:"AK-47",scar:"SCAR",ar15:"AR15",goldenDesertEagle:"GOLDEN DEAGLE",goldenAk47:"GOLDEN AK-47",celestialGlock17:"GLOCK 17"};
+   const weaponNames={glock17:"GLOCK 17",desertEagle:"DESERT EAGLE",m4a1:"M4A1",ar15:"AR15",mp5:"MP5",ak47:"AK-47",scar:"SCAR",mossberg500:"MOSSBERG 500",goldenDesertEagle:"GOLDEN DEAGLE",goldenAk47:"GOLDEN AK-47",celestialGlock17:"GLOCK 17"};
    const wn=document.createElement("div");
    const isGolden =
       (p.skin==="goldenAk47" && p.weapon==="ak47") ||
@@ -7948,7 +7528,7 @@ let profileLoadout = [];
 
 const profileWeaponLabels = {
   glock17:"GLOCK 17", desertEagle:"DESERT EAGLE", m4a1:"M4A1",
-  mp5:"MP5", ak47:"AK-47", scar:"SCAR", ar15:"AR15"
+  mp5:"MP5", ak47:"AK-47", scar:"SCAR", ar15:"AR15", mossberg500:"MOSSBERG 500"
 };
 
 async function loadProfileLoadout(){
@@ -8160,6 +7740,7 @@ function profileWeaponImage(id,skin){
     ak47:"Ak47.png",
     scar:"Scar.png",
     ar15:"AR15.png",
+    mossberg500:"Mossberg500.png",
     goldenDesertEagle:"GoldenDesertEagle.png",
     goldenAk47:"GoldenAk47.png"
   };
@@ -8477,6 +8058,231 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 </script>
+
+<style id="final-bugfix-event-mp-profile">
+/* =========================================================
+   FINAL BUG FIXES
+   1) Golden Event layout: stable 16:9 / landscape composition
+   2) Multiplayer lobby button: always hit-testable
+   3) Remote profile: loadout has a Firebase fallback
+   ========================================================= */
+
+/* ---------- MULTIPLAYER BUTTON HIT AREA ---------- */
+#menu .lobbyButtons{
+  z-index:100 !important;
+  pointer-events:auto !important;
+}
+#menu .lobbyBtn{
+  position:relative !important;
+  z-index:101 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+}
+
+/* ---------- GOLDEN EVENT CLEAN LAYOUT ---------- */
+#goldenEventPage{
+  z-index:120 !important;
+}
+#goldenEventPage #event{
+  width:min(92vw,920px) !important;
+  height:min(88vh,520px) !important;
+}
+#goldenEventPage #event .top{
+  padding:14px 18px 7px !important;
+}
+#goldenEventPage #event .title{
+  font-size:clamp(18px,3.4vw,30px) !important;
+  line-height:1 !important;
+}
+#goldenEventPage #event .sub{
+  font-size:6px !important;
+  margin-top:5px !important;
+}
+#goldenEventPage #event .coinBar{
+  top:12px !important;
+  right:12px !important;
+  min-width:78px;
+  text-align:center;
+}
+#goldenEventPage #event .main{
+  left:6% !important;
+  right:6% !important;
+  top:21% !important;
+  bottom:9% !important;
+  display:grid !important;
+  grid-template-rows:minmax(0,1fr) auto !important;
+  gap:12px !important;
+}
+#goldenEventPage #event .eventGunCards{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:12px !important;
+  width:100% !important;
+  max-width:none !important;
+  min-height:0 !important;
+}
+#goldenEventPage #event .premiumCard{
+  min-width:0 !important;
+  min-height:0 !important;
+  height:100% !important;
+}
+#goldenEventPage #event .gun{
+  width:62% !important;
+  max-width:360px !important;
+  max-height:58% !important;
+}
+#goldenEventPage #event .spinRow{
+  gap:10px !important;
+}
+#goldenEventPage #event .spinBtn{
+  width:190px !important;
+  min-width:0 !important;
+  height:43px !important;
+  font-size:7px !important;
+}
+#goldenEventPage #event .back{
+  left:12px !important;
+  bottom:10px !important;
+}
+#goldenEventPage #event #message{
+  position:absolute;
+  left:20%;
+  right:20%;
+  bottom:11px;
+  min-height:10px;
+  z-index:4;
+}
+@media(max-width:700px){
+  #goldenEventPage #event{
+    width:96vw !important;
+    height:92vh !important;
+  }
+  #goldenEventPage #event .top{
+    padding-top:12px !important;
+  }
+  #goldenEventPage #event .main{
+    left:5% !important;
+    right:5% !important;
+    top:22% !important;
+    bottom:10% !important;
+    gap:8px !important;
+  }
+  #goldenEventPage #event .eventGunCards{
+    gap:7px !important;
+  }
+  #goldenEventPage #event .gun{
+    width:72% !important;
+    max-height:55% !important;
+  }
+  #goldenEventPage #event .spinRow{
+    gap:7px !important;
+  }
+  #goldenEventPage #event .spinBtn{
+    width:calc(50vw - 24px) !important;
+    height:38px !important;
+    font-size:5.5px !important;
+  }
+  #goldenEventPage #event #message{
+    left:15%;
+    right:15%;
+    bottom:8px;
+  }
+}
+</style>
+
+<script id="final-bugfix-mp-profile">
+(function(){
+  "use strict";
+
+  /* ---------- Remote profile: if an older account has no
+     profileLoadout yet, derive a useful 3-slot loadout from that
+     account's real Firebase ownership/equipped state. ---------- */
+  async function fetchOtherProfileFixed(uid){
+    const baseRefs=[
+      db.ref("users/"+uid+"/stats"),
+      db.ref("users/"+uid+"/profileLoadout"),
+      db.ref("users/"+uid+"/equippedSkins"),
+      db.ref("users/"+uid+"/name"),
+      db.ref("users/"+uid+"/money"),
+      db.ref("users/"+uid+"/eventCoins"),
+      db.ref("users/"+uid+"/online"),
+      db.ref("users/"+uid+"/ownedWeapons"),
+      db.ref("users/"+uid+"/equippedWeapon")
+    ];
+
+    const snaps=await Promise.all(baseRefs.map(r=>r.get()));
+    const [
+      statsSnap,loadoutSnap,skinsSnap,nameSnap,moneySnap,
+      coinSnap,onlineSnap,ownedSnap,equippedWeaponSnap
+    ]=snaps;
+
+    const rawSkins=skinsSnap.val()||{};
+    const skinsMap={};
+    Object.keys(rawSkins).forEach(w=>{
+      if(VALID_WEAPONS.includes(w) && typeof rawSkins[w]==="string") skinsMap[w]=rawSkins[w];
+    });
+    const ownedRaw=ownedSnap.val();
+    const owned=new Set(
+      ["glock17"]
+        .concat(Array.isArray(ownedRaw)?ownedRaw:[])
+        .filter(id=>typeof VALID_WEAPONS!=="undefined" && VALID_WEAPONS.includes(id))
+    );
+
+    /* IMPORTANT: profileLoadout is the owner's explicitly saved public
+       loadout. Do NOT filter it through ownedWeapons here: older Firebase
+       accounts/rules may return ownedWeapons differently, which previously
+       made a perfectly valid saved loadout appear empty on another device. */
+    const rawSaved=loadoutSnap.val();
+    let loadout=Array.isArray(rawSaved)
+      ? rawSaved.filter(id=>VALID_WEAPONS.includes(id)).slice(0,3)
+      : [];
+
+    /* Compatibility for profiles created before profileLoadout existed. */
+    if(loadout.length===0){
+      const equipped=equippedWeaponSnap.val();
+      const fallback=[];
+      if(equipped && owned.has(equipped))fallback.push(equipped);
+      owned.forEach(id=>{
+        if(fallback.length<3 && !fallback.includes(id))fallback.push(id);
+      });
+      loadout=fallback.slice(0,3);
+    }
+
+    return {
+      stats:profileMergeStats(statsSnap.val()),
+      loadout,
+      skinsMap,
+      name:nameSnap.val()||"PLAYER",
+      money:Number(moneySnap.val())||0,
+      coin:Number(coinSnap.val())||0,
+      online:onlineSnap.val()===true
+    };
+  }
+
+  /* Replace only the remote-profile data reader; the rest of the
+     profile UI remains unchanged. */
+  if(typeof db!=="undefined" && typeof profileMergeStats==="function"){
+    window.fetchOtherProfile=fetchOtherProfileFixed;
+  }
+
+  /* Keep the saved loadout mirrored with an explicit timestamp.
+     This does not change the existing schema or gameplay data. */
+  if(typeof saveProfileLoadout==="function" && !window.__profileSavePatch){
+    const originalSave=saveProfileLoadout;
+    window.__profileSavePatch=true;
+    window.saveProfileLoadout=async function(){
+      const ok=await originalSave();
+      if(ok && myUid){
+        try{
+          await db.ref("users/"+myUid+"/profileLoadoutUpdatedAt").set(firebase.database.ServerValue.TIMESTAMP);
+        }catch(e){}
+      }
+      return ok;
+    };
+  }
+})();
+</script>
+
 </body>
 </html>
 
