@@ -4957,7 +4957,6 @@ function celestialMossbergChainKill(x,y,ownerUid){
       if(e.type==="boss")mpPlayers[ownerUid].sessionBossKills=(Number(mpPlayers[ownerUid].sessionBossKills)||0)+1;
     }
     enemies.splice(k,1);
-    if(window.__celestialShard)window.__celestialShard.registerKill(e.x,e.y);
   }
 }
 
@@ -5178,7 +5177,6 @@ function update(dt){
         if(e.hp<=0){
           if(b.skin==="celestialMossberg500") spawnCelestialKillExplosion(e.x,e.y);
           score+=e.type==="boss"?1000:100;kills++;profileRecordKill(e.type==="boss");enemies.splice(j,1);
-          if(window.__celestialShard)window.__celestialShard.registerKill(e.x,e.y);
           if(b.skin==="celestialMossberg500") celestialMossbergChainKill(e.x,e.y,myUid);
         }
         break;
@@ -5194,8 +5192,6 @@ function update(dt){
     }
   }
   ebullets=ebullets.filter(b=>b.life>0&&b.x>room.left&&b.x<room.right&&b.y>room.top&&b.y<room.bottom);
-
-  if(window.__celestialShard)window.__celestialShard.update(dt,false);
   updateCelestialKillExplosions(dt);
 
   if(!waveCleared&&kills>=waveKillsTarget){
@@ -5340,8 +5336,6 @@ function draw(){
 
   ctx.drawImage(roomImg,0,0,W,H);
   ctx.fillStyle="rgba(0,0,0,.12)";ctx.fillRect(0,0,W,H);
-
-  if(window.__celestialShard)window.__celestialShard.draw();
   for(const e of enemies){
     const arr=e.type==="ghost"?ghostFrames:e.type==="spider"?spiderFrames:impFrames;
     const sz=enemyDrawSize(e.type);
@@ -5605,7 +5599,6 @@ function mpUpdateHost(dt){
           if(killerUid===myUid)profileRecordKill(e.type==="boss");
           if(e.type==="boss") awardMultiplayerBossCoins();
           score+=e.type==="boss"?1000:100;kills++;enemies.splice(j,1);
-          if(window.__celestialShard)window.__celestialShard.registerKill(e.x,e.y);
           if(b.skin==="celestialMossberg500") celestialMossbergChainKill(e.x,e.y,b.owner||myUid);
         }
         break;
@@ -5623,7 +5616,6 @@ function mpUpdateHost(dt){
 
   for(const q of particles){q.x+=q.vx*dt;q.y+=q.vy*dt;q.l-=dt}
   particles=particles.filter(q=>q.l>0);
-  if(window.__celestialShard)window.__celestialShard.update(dt,true);
   updateCelestialKillExplosions(dt);
 
   for(const uid in mpPlayers)mpPlayers[uid].hp=Math.max(0,mpPlayers[uid].hp);
@@ -5646,7 +5638,7 @@ function mpUpdateHost(dt){
   // Publish on a real-time interval instead of every N frames.
   // This keeps network cadence stable even when the host FPS changes.
   mpNetPublishAcc += dt;
-  if(mpNetPublishAcc >= 0.033){
+  if(mpNetPublishAcc >= 0.08){
     mpNetPublishAcc = 0;
     mpPublishState();
   }
@@ -5947,8 +5939,6 @@ function mpDraw(){
   if(me){
     ctx.fillStyle="rgba(0,0,0,.12)";ctx.fillRect(0,0,W,H);
   }
-
-  if(window.__celestialShard)window.__celestialShard.draw();
   for(const e of enemiesToDraw){
     const arr=e.type==="ghost"?ghostFrames:e.type==="spider"?spiderFrames:impFrames;
     const sz=enemyDrawSize(e.type);
@@ -6980,7 +6970,8 @@ document.addEventListener("DOMContentLoaded",()=>{
     let reloadTime=base.reloadTime||0;
     if(pl.skin === "celestialGlock17" && wid === "glock17"){
       damage = 50;
-      rate = 1 / .15;
+      // Celestial Glock17 keeps its damage bonus, but its fire rate is identical to the base Glock 17 in multiplayer.
+      rate = 1 / .32;
     }
     if(pl.skin === "celestialMossberg500" && wid === "mossberg500"){
       damage = base.damage*2;
@@ -7310,8 +7301,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
 
     if(isBossWave(wave)){
-      mpPhaseState="upgrade";
-      mpNextWaveAt=0;
+      // Multiplayer boss-wave reward is automatic: +10 Health and +2 Damage.
+      // This removes the old host-only choice that could leave Wave 10 stuck.
+      for(const uid in mpPlayers){
+        const pl=mpPlayers[uid];
+        if(pl && pl.hp>0) pl.hp=Math.min(100,Number(pl.hp||0)+10);
+      }
+      damage += 2;
+      mpPhaseState="countdown";
+      mpCountdownStartAt=Date.now();
+      mpNextWaveAt=mpCountdownStartAt+3000;
+      window.__mpCountdownStartAt=mpCountdownStartAt;
+      window.__mpCountdownEndAt=mpNextWaveAt;
+      mpCountdownClientStart=performance.now();
     }else if(mpPhaseState!=="countdown"){
       mpPhaseState="countdown";
       mpCountdownStartAt=Date.now();
@@ -9098,6 +9100,134 @@ document.addEventListener("DOMContentLoaded",()=>{
 <style id="celestial-shop-disabled-final">
 .celestialBuy:disabled,.celestialBuy.isDisabled,.celestialShopCard .celestialBuy[disabled]{background:#5b6470 !important;color:#d9dde2 !important;border-color:#858d97 !important;box-shadow:3px 3px 0 #20252b !important;filter:none !important;opacity:1 !important;cursor:not-allowed !important}
 </style>
+
+<script id="final-multiplayer-fix-v3">
+/* =========================================================
+   FINAL MULTIPLAYER FIX V3
+   - Wave 10/20/... auto reward: +10 Health, +2 Damage
+   - Celestial Glock17 multiplayer fire rate = base Glock17
+   - Lower Firebase state publish frequency to reduce lag
+   - Profile presence: ONLINE / IN GAME / OFFLINE
+   ========================================================= */
+(function(){
+  const GAME_MODE_KEY="wdGameMode";
+  window.__gamePresenceMode=null;
+
+  async function setGamePresence(mode){
+    window.__gamePresenceMode=mode||null;
+    try{
+      if(typeof myUid!=="undefined"&&myUid&&typeof db!=="undefined"){
+        await db.ref("users/"+myUid+"/gameStatus").set(mode||null);
+        await db.ref("users/"+myUid+"/online").set(true);
+      }
+    }catch(e){}
+  }
+  window.setGamePresence=setGamePresence;
+
+  // Single-player starts when #play is pressed.
+  document.getElementById("play")?.addEventListener("click",()=>setGamePresence("singleplayer"));
+
+  // Multiplayer starts through the final startMultiplayerGame wrapper.
+  if(typeof window.startMultiplayerGame==="function"){
+    const originalStartMP=window.startMultiplayerGame;
+    window.startMultiplayerGame=async function(){
+      await setGamePresence("multiplayer");
+      return originalStartMP.apply(this,arguments);
+    };
+  }
+
+  async function returnOnline(){
+    window.__gamePresenceMode=null;
+    try{
+      if(typeof myUid!=="undefined"&&myUid&&typeof db!=="undefined"){
+        await db.ref("users/"+myUid+"/gameStatus").remove();
+        await db.ref("users/"+myUid+"/online").set(true);
+      }
+    }catch(e){}
+  }
+
+  // Leaving multiplayer returns the profile to ONLINE.
+  if(typeof window.mpLeaveToMenu==="function"){
+    const oldLeave=window.mpLeaveToMenu;
+    window.mpLeaveToMenu=async function(){
+      const r=await oldLeave.apply(this,arguments);
+      await returnOnline();
+      return r;
+    };
+  }
+
+  // Game-over MENU returns the player to ONLINE for both modes.
+  document.getElementById("gameOverMenuBtn")?.addEventListener("click",()=>{
+    setTimeout(returnOnline,300);
+  });
+
+  // Logout must clear the game-state marker too.
+  document.getElementById("logoutBtn")?.addEventListener("click",()=>{
+    try{
+      if(typeof myUid!=="undefined"&&myUid&&typeof db!=="undefined"){
+        db.ref("users/"+myUid+"/gameStatus").remove();
+      }
+    }catch(e){}
+  });
+
+  // Profile renderer: read gameStatus for public profiles and show IN GAME in orange.
+  if(typeof window.fetchOtherProfile==="function"){
+    const oldFetchProfile=window.fetchOtherProfile;
+    window.fetchOtherProfile=async function(uid){
+      const data=await oldFetchProfile.apply(this,arguments);
+      try{
+        const snap=await db.ref("users/"+uid+"/gameStatus").get();
+        data.gameStatus=snap.val()||null;
+      }catch(e){data.gameStatus=null;}
+      return data;
+    };
+  }
+
+  if(typeof window.renderProfile==="function"){
+    const oldRenderProfile=window.renderProfile;
+    window.renderProfile=async function(targetUid,returnTo){
+      await oldRenderProfile.apply(this,arguments);
+      const badge=document.getElementById("profileStatusBadge");
+      if(!badge)return;
+      const uid=targetUid||myUid;
+      let inGame=null;
+      try{
+        if(uid===myUid){
+          inGame=window.__gamePresenceMode;
+        }else if(typeof db!=="undefined"){
+          const snap=await db.ref("users/"+uid+"/gameStatus").get();
+          inGame=snap.val()||null;
+        }
+      }catch(e){}
+      if(inGame){
+        badge.textContent="IN GAME";
+        badge.classList.remove("online","offline");
+        badge.classList.add("inGame");
+      }
+    };
+  }
+
+  // Re-render an already-open profile when the local game state changes.
+  window.addEventListener("wdGamePresenceChanged",()=>{
+    try{
+      const overlay=document.getElementById("profileOverlay");
+      if(overlay?.classList.contains("show")&&typeof window.renderProfile==="function"){
+        window.renderProfile(window.profileViewingUid||myUid);
+      }
+    }catch(e){}
+  });
+
+  const oldSetPresence=setGamePresence;
+  window.setGamePresence=async function(mode){
+    await oldSetPresence(mode);
+    window.dispatchEvent(new Event("wdGamePresenceChanged"));
+  };
+})();
+</script>
+<style id="profile-in-game-status">
+.profileStatusBadge.inGame{color:#ff9d3d !important}
+</style>
+
 </body>
 </html>
 
@@ -9287,15 +9417,6 @@ document.addEventListener("DOMContentLoaded",()=>{
           <span class="eventMiniDesc">GOLDEN DESERT EAGLE • SPIN EVENT</span>
         </span>
       </button>
-      <button type="button" class="eventHubCard celestial" id="openCelestialMossbergEvent">
-        <img class="eventCardArt" src="image/CMossberg500.gif" alt="">
-        <span class="eventCardShade"></span>
-        <span class="eventCardText">
-          <span class="eventMiniTag">EVENT 02</span>
-          <span class="eventMiniTitle">CELESTIAL</span>
-          <span class="eventMiniDesc">CELESTIAL MOSSBERG 500 • GRATIS</span>
-        </span>
-      </button>
       <div class="eventHubCard mystery" aria-label="Event berikutnya">
         <span class="mysteryQuestion">?</span>
       </div>
@@ -9304,69 +9425,13 @@ document.addEventListener("DOMContentLoaded",()=>{
   </div>
 </div>
 
-<div id="celestialEventPage" aria-hidden="true">
-  <div class="celestialBox">
-    <div class="celestialTop">
-      <div class="celestialTitle">CELESTIAL</div>
-      <div class="celestialSub">LIMITED EVENT • THE HEAVENLY GLOCK17</div>
-    </div>
-    <div class="celestialMain">
-      <div class="celestialPreview">
-        <img src="image/CGlock17.gif" alt="Celestial Glock17">
-      </div>
-      <div class="celestialInfo">
-        <div class="celestialBadge">CELESTIAL • LIMITED</div>
-        <div class="celestialName">GLOCK 17</div>
-        <div class="celestialDesc">GLOCK 17 DENGAN AURA SURGAWI, SAYAP CAHAYA, DAN EFEK TEMBAKAN UNGU.</div>
-        <div class="celestialFeatures">
-          <div class="celestialFeature">✦ GIF WEAPON • ANIMASI HIDUP</div>
-          <div class="celestialFeature">✦ 4-FRAME FIRING ANIMATION</div>
-          <div class="celestialFeature">✦ PURPLE CELESTIAL MUZZLE</div>
-        </div>
-        <button type="button" class="celestialClaim" id="celestialClaimBtn">CLAIM REWARD</button>
-      </div>
-    </div>
-    <div class="celestialStatus" id="celestialStatus">EVENT REWARD • GLOCK 17</div>
-    <button type="button" class="celestialBack" id="celestialBackBtn">BACK TO EVENT</button>
-  </div>
-</div>
 
-<div id="celestialMossbergEventPage" aria-hidden="true">
-  <div class="celestialBox">
-    <div class="celestialTop">
-      <div class="celestialTitle">CELESTIAL</div>
-      <div class="celestialSub">EVENT LAMA • THE HEAVENLY MOSSBERG 500</div>
-    </div>
-    <div class="celestialMain">
-      <div class="celestialPreview">
-        <img src="image/CMossberg500.gif" alt="Celestial Mossberg500">
-      </div>
-      <div class="celestialInfo">
-        <div class="celestialBadge">CELESTIAL • GRATIS</div>
-        <div class="celestialName">MOSSBERG 500</div>
-        <div class="celestialDesc">SKIN CELESTIAL GRATIS UNTUK MOSSBERG 500 DENGAN ANIMASI GIF YANG TERUS BERGERAK.</div>
-        <div class="celestialFeatures">
-          <div class="celestialFeature">✦ GIF WEAPON • ANIMASI HIDUP</div>
-          <div class="celestialFeature">✦ CELESTIAL AURA</div>
-          <div class="celestialFeature">✦ GRATIS • CLAIM 1X</div>
-        </div>
-        <button type="button" class="celestialClaim" id="celestialMossbergClaimBtn" style="display:none">CLAIM GRATIS</button>
-      </div>
-    </div>
-    <div class="celestialStatus" id="celestialMossbergStatus">EVENT REWARD • MOSSBERG 500</div>
-    <button type="button" class="celestialBack" id="celestialMossbergBackBtn">BACK TO EVENT</button>
-  </div>
-</div>
 
 <script id="celestial-event-addon-js">
 (function(){
   function showHub(){
     const menu=document.getElementById("menu");
     const hub=document.getElementById("eventHubOverlay");
-    const page=document.getElementById("celestialEventPage");
-    const mossPage=document.getElementById("celestialMossbergEventPage");
-    if(page)page.classList.remove("show");
-    if(mossPage)mossPage.classList.remove("show");
     if(menu)menu.style.display="none";
     if(hub){hub.classList.add("show");hub.setAttribute("aria-hidden","false");}
   }
@@ -9467,12 +9532,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       if(hub)hub.classList.remove("show");
       showGoldenEventPage();
     });
-    document.getElementById("openCelestialMossbergEvent")?.addEventListener("click",openCelestialMossberg);
     document.getElementById("closeEventHub")?.addEventListener("click",hideHub);
-    document.getElementById("celestialBackBtn")?.addEventListener("click",backToHub);
-    document.getElementById("celestialClaimBtn")?.addEventListener("click",claimCelestial);
-    document.getElementById("celestialMossbergBackBtn")?.addEventListener("click",backFromCelestialMossberg);
-    document.getElementById("celestialMossbergClaimBtn")?.addEventListener("click",claimCelestialMossberg);
   });
 })();
 </script>
@@ -9499,15 +9559,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   /* ================= CELESTIAL SHARD DATA ================= */
   let celestialShards=0;
-  let celestialShardDrops=[];
-  let celestialShardKillCounter=0;
-  let celestialShardDropsThisWave=0;
-  let celestialShardWave=0;
-  let celestialShardTargetThisWave=1+Math.floor(Math.random()*3);
-  let celestialShardNextDrop=1+Math.floor(Math.random()*3);
-  let celestialShardDropSeq=0;
-  let celestialShardPickupSeq=0;
-  let celestialShardSeenPickupSeq=0;
   let celestialShardToastTimer=0;
 
   const shardLocalKey=()=>"wdCelestialShards:"+String(typeof myUid!="undefined"&&myUid?myUid:"guest");
@@ -9545,76 +9596,6 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(!el){el=document.createElement("div");el.id="celestialShardToast";document.body.appendChild(el)}
     el.textContent=text;el.classList.remove("show");void el.offsetWidth;el.classList.add("show");
     clearTimeout(celestialShardToastTimer);celestialShardToastTimer=setTimeout(()=>el.classList.remove("show"),1250);
-  }
-
-  /*
-     SHARD DROP PER WAVE:
-     - Each wave may drop only 1-3 Celestial Shards total.
-     - The exact limit is randomized once at the start of every wave.
-     - No matter how many monsters are killed, that wave can never exceed 3 drops.
-     - The counter automatically resets when the wave number changes.
-  */
-  function registerCelestialMonsterKill(x,y){
-    const currentWave=Math.max(1,Number(typeof wave!=="undefined"?wave:1)||1);
-
-    if(celestialShardWave!==currentWave){
-      celestialShardWave=currentWave;
-      celestialShardDropsThisWave=0;
-      celestialShardKillCounter=0;
-      celestialShardTargetThisWave=1+Math.floor(Math.random()*3); // 1, 2, or 3 only
-      celestialShardNextDrop=1+Math.floor(Math.random()*3);
-    }
-
-    if(celestialShardDropsThisWave>=celestialShardTargetThisWave)return;
-
-    celestialShardKillCounter++;
-    if(celestialShardKillCounter<celestialShardNextDrop)return;
-
-    celestialShardKillCounter=0;
-    celestialShardNextDrop=1+Math.floor(Math.random()*3);
-    celestialShardDropsThisWave=Math.min(3,celestialShardDropsThisWave+1);
-    spawnCelestialShard(x,y);
-  }
-  function spawnCelestialShard(x,y){
-    celestialShardDrops.push({id:"cs_"+(Date.now().toString(36))+"_"+(++celestialShardDropSeq),x,y,age:0,life:30,bob:Math.random()*Math.PI*2});}
-  function updateCelestialShardDrops(dt,hostMode){
-    for(const d of celestialShardDrops){d.age+=dt;d.bob+=dt*4}
-    celestialShardDrops=celestialShardDrops.filter(d=>d.age<d.life);
-    if(hostMode){
-      for(let i=celestialShardDrops.length-1;i>=0;i--){
-        const d=celestialShardDrops[i];
-        let picker=null,best=15;
-        for(const uid in mpPlayers){const pl=mpPlayers[uid];if(!pl||Number(pl.hp||0)<=0)continue;const dist=Math.hypot(pl.x-d.x,pl.y-d.y);if(dist<best){best=dist;picker=uid}}
-        if(picker){
-          celestialShardDrops.splice(i,1);
-          addCelestialShards(picker,1);
-          celestialShardPickupSeq++;
-          window.__lastCelestialShardPickup={seq:celestialShardPickupSeq,uid:picker,amount:1,ts:Date.now()};
-        }
-      }
-    }else if(!mpMode){
-      for(let i=celestialShardDrops.length-1;i>=0;i--){
-        const d=celestialShardDrops[i];
-        if(Math.hypot(p.x-d.x,p.y-d.y)<15){
-          celestialShardDrops.splice(i,1);
-          addCelestialShards(myUid,1);
-        }
-      }
-    }
-  }
-  function drawCelestialShards(){
-    if(!celestialShardDrops.length)return;
-    for(const d of celestialShardDrops){
-      const bob=Math.sin(d.bob)*1.5;
-      const fade=d.age>27?Math.max(0,(30-d.age)/3):1;
-      ctx.save();ctx.globalAlpha=fade;ctx.imageSmoothingEnabled=false;
-      const im=window.__celestialShardImg||(window.__celestialShardImg=new Image());
-      if(!im.src)im.src="assets/CelestiaShard.png";
-      if(im.complete)ctx.drawImage(im,Math.round(d.x-5),Math.round(d.y-5+bob),10,10);
-      else{ctx.fillStyle="#a85cff";ctx.fillRect(Math.round(d.x-4),Math.round(d.y-4+bob),8,8)}
-      ctx.globalAlpha=.65*fade;ctx.fillStyle="#c66cff";ctx.fillRect(Math.round(d.x-7),Math.round(d.y+6+bob),14,1);
-      ctx.restore();
-    }
   }
 
   /* ================= INVENTORY ITEM TAB ================= */
@@ -9682,67 +9663,12 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 
   /* Replace the old free-claim presentation with a SHARD SHOP button. */
-  function convertMossbergEventPage(){
-    const page=document.getElementById("celestialMossbergEventPage");if(!page)return;
-    const badge=page.querySelector(".celestialBadge");if(badge)badge.textContent="CELESTIAL • SHARD SHOP";
-    const sub=page.querySelector(".celestialSub");if(sub)sub.textContent="LIMITED EVENT • COLLECT CELESTIAL SHARD";
-    const desc=page.querySelector(".celestialDesc");if(desc)desc.textContent="KALAHKAN MONSTER UNTUK MENDAPATKAN CELESTIAL SHARD. TUKARKAN SHARD DI SHOP EVENT UNTUK MENDAPATKAN REWARD.";
-    const features=page.querySelector(".celestialFeatures");if(features)features.innerHTML='<div class="celestialFeature">✦ DROP SETIAP 1–3 MONSTER KILL</div><div class="celestialFeature">✦ 100 SHARD • CELESTIAL MOSSBERG 500</div><div class="celestialFeature">✦ 50 SHARD • CELESTIAL GLOCK 17</div>';
-    const old=document.getElementById("celestialMossbergClaimBtn");if(old){old.style.display="none";let shop=page.querySelector("#celestialOpenShopBtn");if(!shop){shop=document.createElement("button");shop.type="button";shop.id="celestialOpenShopBtn";shop.className="celestialClaim";shop.textContent="OPEN SHOP";old.insertAdjacentElement("afterend",shop);shop.addEventListener("click",openCelestialShop)}}
-    const st=document.getElementById("celestialMossbergStatus");if(st)st.textContent="CELESTIAL SHARD • KUMPULKAN DAN TUKARKAN DI SHOP";
-  }
-
   /* Make the event cards taller so they are not squashed/flattened. */
-  function patchEventHubText(){
-    const d=document.querySelector("#openCelestialMossbergEvent .eventMiniDesc");if(d)d.textContent="CELESTIAL MOSSBERG 500 • SHARD SHOP";
-    const b=document.getElementById("openCelestialMossbergEvent");if(b)b.classList.add("shardEventCard");
-  }
-
-  /* ================= HOST / SINGLEPLAYER HOOKS ================= */
-  function wrapGameplay(){
-    if(typeof update==="function"&&!update.__celestialShardWrapped){
-      const oldUpdate=update;const wrapped=function(dt){oldUpdate(dt);updateCelestialShardDrops(dt,false)};wrapped.__celestialShardWrapped=true;update=wrapped;
-    }
-    if(typeof mpUpdateHost==="function"&&!mpUpdateHost.__celestialShardWrapped){
-      const oldMp=mpUpdateHost;const wrapped=function(dt){oldMp(dt);updateCelestialShardDrops(dt,true);if(typeof mpPublishState==="function")mpPublishState()};wrapped.__celestialShardWrapped=true;mpUpdateHost=wrapped;
-    }
-    if(typeof draw==="function"&&!draw.__celestialShardWrapped){
-      const oldDraw=draw;const wrapped=function(){oldDraw();/* Draw drops above the game only when the base draw is complete. */};wrapped.__celestialShardWrapped=true;draw=wrapped;
-    }
-    if(typeof mpDraw==="function"&&!mpDraw.__celestialShardWrapped){
-      const oldMpDraw=mpDraw;const wrapped=function(){oldMpDraw();};wrapped.__celestialShardWrapped=true;mpDraw=wrapped;
-    }
-  }
-
-  /* We need the shard image/drop to be drawn inside the canvas, so patch the
-     existing draw functions at their known render point once. */
-  function injectCanvasDraws(){
-    if(typeof draw==="function"&&!draw.__shardCanvasInjected){
-      const src=draw.toString();
-      if(src.includes("drawCelestialKillExplosions();")){
-        const old=draw;
-        draw=function(){
-          old();
-          // redraw shard icons in a tiny overlay canvas pass is intentionally skipped;
-          // the primary draw path below is injected through source replacement.
-        };
-      }
-    }
-  }
-
-  /* Source-level injection is done by replacing the existing draw call via a
-     lightweight text-independent hook: render a separate fixed canvas layer is
-     avoided; instead we expose helpers for the main loop patch below. */
-
   function onReady(){
     ensureInventoryItemTab();
-    convertMossbergEventPage();
-    patchEventHubText();
     loadCelestialShards();
     updateCelestialShardUI();
     wrapGameplay();
-    const openBtn=document.getElementById("celestialOpenShopBtn");
-    if(openBtn&&!openBtn.__bound){openBtn.__bound=true;openBtn.addEventListener("click",openCelestialShop)}
     document.addEventListener("click",e=>{
       const tab=e.target.closest('#inventoryOverlay .invTab[data-invtab="items"]');if(tab)setInventoryPanel("items");
     });
@@ -9752,17 +9678,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   /* Public hooks used by the gameplay source patch below. */
   window.__celestialShard={
-    registerKill:registerCelestialMonsterKill,
-    update:updateCelestialShardDrops,
-    draw:drawCelestialShards,
     load:loadCelestialShards,
     save:saveCelestialShards,
     updateUI:updateCelestialShardUI,
     ensureInventoryItemTab:ensureInventoryItemTab,
-    showToast:showCelestialShardToast,
-    get drops(){return celestialShardDrops},
-    set drops(v){celestialShardDrops=Array.isArray(v)?v:[]},
-    get pickupSeq(){return celestialShardPickupSeq}
+    showToast:showCelestialShardToast
   };
 })();
 </script>
