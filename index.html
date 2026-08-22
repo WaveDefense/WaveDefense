@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Wave Defense</title>
+<title>Neon Crypt</title>
 <style>
 @font-face{font-family:"NeonPixel";src:url("assets/PixelNeon.ttf") format("truetype");font-display:block}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -4347,16 +4347,9 @@ async function loadOwnedSkins(){
       if(dataEq)equippedSkins=Object.assign(equippedSkins,dataEq);
     }catch(e){}
   }
-  // Remove legacy phantom Golden ownership from this account only.
-  // Celestial is the active new skin and remains untouched.
-  const hadLegacyGolden = ownedSkins.delete("goldenDesertEagle") | ownedSkins.delete("goldenAk47");
-  if(equippedSkins.desertEagle==="goldenDesertEagle")delete equippedSkins.desertEagle;
-  if(equippedSkins.ak47==="goldenAk47")delete equippedSkins.ak47;
+  // Keep all valid owned skins, including Golden Desert Eagle and Golden AK47.
+  // Only remove equipped entries whose skin is genuinely not owned.
   for(const w in equippedSkins){if(!isSkinOwned(equippedSkins[w]))delete equippedSkins[w];}
-  if(hadLegacyGolden){
-    try{localStorage.setItem(skinOwnedKey(),JSON.stringify([...ownedSkins]));localStorage.setItem(skinEquippedKey(),JSON.stringify(equippedSkins));}catch(e){}
-    if(typeof myUid!=="undefined"&&myUid){db.ref("users/"+myUid).update({ownedSkins:[...ownedSkins],equippedSkins}).catch(()=>{});}
-  }
   refreshSkinUI();
 }
 async function saveOwnedSkins(){
