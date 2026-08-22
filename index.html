@@ -4751,7 +4751,9 @@ function initAudio(){
 }
 function gunSound(){
   initAudio();
-  const base=weaponAudio[currentWeapon]||weaponAudio.glock17;
+  // Celestial Mossberg uses the exact same firing sound as the normal Mossberg500.
+  const audioId=(currentWeapon==="mossberg500" ? "mossberg500" : currentWeapon);
+  const base=weaponAudio[audioId]||weaponAudio.glock17;
   const a=base.cloneNode();
   a.volume=settingsState.volume/100;
   const p=a.play();
@@ -5243,7 +5245,7 @@ function gunFrameForWeapon(id,t){
   if(id!=="glock17")return gunImageForWeapon(id);
   if(t<0.045)return gunA1;if(t<0.085)return gunA2;if(t<0.13)return gunA1;return gunGlock;
 }
-function gunSoundForWeapon(id){const base=weaponAudio[id]||weaponAudio.glock17;if(!base)return;try{base.currentTime=0;const q=base.play();if(q&&q.catch)q.catch(()=>{})}catch(e){}}
+function gunSoundForWeapon(id){const audioId=(id==="mossberg500" ? "mossberg500" : id);const base=weaponAudio[audioId]||weaponAudio.glock17;if(!base)return;try{base.currentTime=0;const q=base.play();if(q&&q.catch)q.catch(()=>{})}catch(e){}}
 function currentGunFrame(t){
   if(currentWeapon==="glock17"&&equippedSkins&&equippedSkins.glock17==="celestialGlock17"&&isSkinOwned("celestialGlock17")){
     if(t<0.035)return gunCelestialA1;
@@ -7526,22 +7528,44 @@ document.addEventListener("DOMContentLoaded",()=>{
     mpLastPublish=0;mpPhaseState="playing";mpNextWaveAt=0;
 
     if(isHost){
-      const snap=await db.ref("lobbies/"+lobbyCode+"/players").get();
-      const playersData=snap.val()||{};
+      // Build the multiplayer roster immediately from lobby data.
+      // Do not let a slow Firebase user-data read freeze the whole match.
+      let playersData={};
+      try{
+        const snap=await Promise.race([
+          db.ref("lobbies/"+lobbyCode+"/players").get(),
+          new Promise((_,reject)=>setTimeout(()=>reject(new Error("lobby read timeout")),4000))
+        ]);
+        playersData=snap.val()||{};
+      }catch(e){
+        console.warn("MP lobby read failed:",e);
+        playersData={};
+      }
       const uids=Object.keys(playersData);
 
+      // Lobby data is the authoritative fallback. User profile reads are optional.
       await Promise.all(uids.map(async uid=>{
         try{
-          const [ws,ss]=await Promise.all([
-            db.ref("users/"+uid+"/equippedWeapon").get(),
-            db.ref("users/"+uid+"/equippedSkins").get()
+          const result=await Promise.race([
+            Promise.all([
+              db.ref("users/"+uid+"/equippedWeapon").get(),
+              db.ref("users/"+uid+"/equippedSkins").get()
+            ]),
+            new Promise((_,reject)=>setTimeout(()=>reject(new Error("user load timeout")),2000))
           ]);
-          const wid=ws.val();
-          const skins=ss.val()||{};
+          const wid=result[0].val();
+          const skins=result[1].val()||{};
           if(weaponStats[wid])playersData[uid].weapon=wid;
-          playersData[uid].skin=(skins && skins[wid]) || null;
+          if(skins && skins[wid])playersData[uid].skin=skins[wid];
         }catch(e){}
       }));
+
+      // Never start an empty host simulation if the lobby roster could not be read.
+      if(!uids.length){
+        console.warn("MP start aborted: no players found in lobby");
+        mpMode=false; running=false;
+        return;
+      }
 
       const spawnPts=[{x:172,y:110},{x:212,y:110},{x:172,y:145},{x:212,y:145}];
       mpPlayers={};
@@ -7559,7 +7583,8 @@ document.addEventListener("DOMContentLoaded",()=>{
       mpRemoteInputs={};
       mpAttachHostInputListener();
       mpAttachRewardListener();
-      mpPublishState();
+      // Publish asynchronously so a slow Firebase write cannot block gameplay.
+      Promise.resolve(mpPublishState()).catch(e=>console.warn("MP initial publish failed",e));
     }else{
       mpAttachGuestStateListener();
       mpAttachRewardListener();
